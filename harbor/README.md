@@ -46,5 +46,5 @@ helm install harbor --namespace harbor  -f values.private.yaml harbor/harbor --v
 #helm install harbor --namespace harbor  -f values.private.yaml ./helm-chart-harbor
 ```
 
-As soon as all components are running, Harbor portal should be available at https://harbor.chaimeleon-eu.i3m.upv.es/.
+As soon as all components are running, Harbor portal should be available at https://eucaim.cancerimage.eu:10433.
 
