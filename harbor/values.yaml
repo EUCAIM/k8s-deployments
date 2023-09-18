@@ -1,0 +1,187 @@
+# expose:
+#   type: ingress
+# #  tls: 
+# #    enabled: true
+# #    certSource: secret
+# #    secret:
+# #      secretName: eucaim.cancerimage.eu
+#   ingress:
+#     harbor:
+#       annotations: 
+# #        cert-manager.io/cluster-issuer: letsencrypt-prod
+#         kubernetes.io/ingress.class: nginx
+#         nginx.ingress.kubernetes.io/rewrite-target: /$1
+#     hosts:
+#       core: eucaim.cancerimage.eu
+expose:
+   type: nodePort 
+   tls: 
+     enabled: true
+     certSource: secret
+     secret:
+      secretName: eucaim.cancerimage.eu
+   nodePort:
+    name: harbor
+    ports:
+      https:
+        port: 443
+        nodePort: 10443      
+
+externalURL: https://eucaim.cancerimage.eu:10443
+#externalURL: https://eucaim.cancerimage.eu/harbor
+
+internalTLS:
+  enabled	: true
+  certSource: auto
+
+persistence:
+    enabled	: true
+    persistentVolumeClaim:
+      registry:
+        existingClaim: harbor-harbor-pvc
+        subPath: registry
+      chartmuseum:
+        existingClaim: harbor-harbor-pvc	
+        subPath: chartmuseum
+      jobservice:
+        existingClaim: harbor-harbor-pvc
+        subPath: jobservice
+      database:
+        existingClaim: harbor-harbor-pvc
+        subPath: database
+      redis:
+        existingClaim: harbor-harbor-pvc
+        subPath: redis
+      trivy:
+        existingClaim: harbor-harbor-pvc
+        subPath: trivy
+
+
+harborAdminPassword: XXXXXXXXXXXXXXXXX
+
+portal:
+  priorityClassName: core-services
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "200m"
+    limits:
+      memory: "1024Mi"
+      cpu: "1000m" #1 cpu
+
+core:
+  priorityClassName: core-services
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "200m"
+    limits:
+      memory: "1024Mi"
+      cpu: "1000m" #1 cpu
+
+jobservice:
+  priorityClassName: core-services
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "200m"
+    limits:
+      memory: "1024Mi"
+      cpu: "1000m" #1 cpu
+
+registry:
+  priorityClassName: core-services
+  credentials:
+    username: admin
+    password: XXXXXXXXXXXXXXXXX
+    htpasswd: admin:XXXXXXXXXXXXXXXXX
+  registry:
+    resources:
+      requests:
+        memory: "512Mi"
+        cpu: "200m"
+      limits:
+        memory: "1024Mi"
+        cpu: "1000m" #1 cpu
+  controller:
+    resources:
+      requests:
+        memory: "512Mi"
+        cpu: "200m"
+      limits:
+        memory: "1024Mi"
+        cpu: "1000m" #1 cpu
+
+chartmuseum:
+  enabled	: true
+  priorityClassName: core-services
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "200m"
+    limits:
+      memory: "1024Mi"
+      cpu: "1000m" 
+
+trivy:
+  enabled	: true
+  priorityClassName: core-services
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "200m"
+    limits:
+      memory: "1024Mi"
+      cpu: "1000m" #1 cpu
+
+notary:
+  enabled: false
+
+database:
+  type: internal
+  internal:
+    password: XXXXXXXXXXXXXXXXX
+    priorityClassName: core-services
+    resources:
+      requests:
+        memory: "512Mi"
+        cpu: "200m"
+      limits:
+        memory: "1024Mi"
+        cpu: "1000m" #1 cpu
+
+redis:
+  type: internal
+  internal:
+    priorityClassName: core-services
+    resources:
+      requests:
+        memory: "512Mi"
+        cpu: "200m"
+      limits:
+        memory: "1024Mi"
+        cpu: "1000m" #1 cpu
+
+exporter:
+  priorityClassName: core-services
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "200m"
+    limits:
+      memory: "1024Mi"
+      cpu: "1000m" #1 cpu
+
+#nginx:
+# priorityClassName: core-services
+# resources:
+#   requests:
+#     memory: "1000Mi"
+#     cpu: "1000m"
+#   limits:
+#     memory: "1000Mi"
+#     cpu: "1000m" #1 Gb
+
+metrics:
+  enabled: false	
+

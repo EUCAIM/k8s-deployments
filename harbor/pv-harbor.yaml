@@ -1,0 +1,19 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: harbor-harbor-pv
+spec:
+  capacity:
+    storage: 60Gi
+  nfs:
+    server: 10.0.0.9
+    path: /mnt/nfs_share/harbor
+  accessModes:
+    - ReadWriteMany
+  claimRef:
+    kind: PersistentVolumeClaim
+    namespace: harbor
+    name: harbor-harbor-pvc
+  persistentVolumeReclaimPolicy: Recycle
+  storageClassName: nfs-harbor
+  volumeMode: Filesystem
