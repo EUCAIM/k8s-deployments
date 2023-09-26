@@ -1,22 +1,31 @@
-kind: Pod
-apiVersion: v1
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: eucaim-mockup
   labels:
     app: eucaim-mockup
 spec:
-  volumes:
-    - name: mockup-vol
-      persistentVolumeClaim:
-        claimName: mockup-vol-pvc
-  containers:
-  - name: nginx
-    image: nginx
-    volumeMounts:
-      - mountPath: /usr/share/nginx/html/
-        name: mockup-vol
-    ports:
-    - containerPort: 80
+  replicas: 1 
+  selector:
+    matchLabels:
+      app: eucaim-mockup
+  template:
+    metadata:
+      labels:
+        app: eucaim-mockup
+    spec:
+      volumes:
+        - name: mockup-vol
+          persistentVolumeClaim:
+            claimName: mockup-vol-pvc
+      containers:
+        - name: nginx
+          image: nginx
+          volumeMounts:
+            - mountPath: /usr/share/nginx/html/
+              name: mockup-vol
+          ports:
+            - containerPort: 80
 ---
 kind: Service
 apiVersion: v1
