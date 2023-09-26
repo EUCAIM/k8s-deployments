@@ -1,0 +1,43 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: federated-search-vault-data-pv
+spec:
+  capacity:
+    storage: 10Gi
+  nfs:
+    server: 10.0.0.9
+    path: /mnt/nfs_share/federated-search/vault/data
+  accessModes:
+    - ReadWriteMany
+  claimRef:
+    kind: PersistentVolumeClaim
+    namespace: federated-search
+    name: data-vault-0
+  persistentVolumeReclaimPolicy: Recycle
+  storageClassName: nfs-vault
+  volumeMode: Filesystem
+
+---
+
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: federated-search-vault-audit-pv
+spec:
+  capacity:
+    storage: 1Gi
+  nfs:
+    server: 10.0.0.9
+    path: /mnt/nfs_share/federated-search/vault/audit
+  accessModes:
+    - ReadWriteMany
+  claimRef:
+    kind: PersistentVolumeClaim
+    namespace: federated-search
+    name: audit-vault-0
+  persistentVolumeReclaimPolicy: Recycle
+  storageClassName: nfs-vault
+  volumeMode: Filesystem
+
+---

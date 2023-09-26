@@ -1,0 +1,113 @@
+# apiVersion: v1
+# kind: Secret
+# metadata:
+#   name: broker-monit-secret
+# data:
+#   MONITORING_API_KEY: <your key here>
+
+# ---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: pki-secret
+data:
+  pki.secret: aHZzLnFHaHlONk1Sa2dURlA2bG5nNTJQMmNHbQ==
+
+# ---
+
+# apiVersion: v1
+# kind: Secret
+# metadata:
+#   name: broker-certs-secret
+# data:
+#   broker.pem: <your pem certificate here>
+#   root.crt.pem: <your root crt pem here>
+
+# ---
+
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   name: broker-env-config
+#   namespace: default
+# data:
+#   BROKER_URL: <your url here>
+
+# ---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: broker-deployment
+  labels:
+    app: broker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: broker
+  template:
+    metadata:
+      labels:
+        app: broker
+    spec:
+      containers:
+      - name: broker
+        image: samply/beam-broker:main
+        env:
+        - name: RUST_LOG
+          value: debug
+        - name: PKI_ADDRESS
+          value: http://vault:8200
+        - name: no_proxy
+          value: vault
+        - name: NO_PROXY
+          value: vault
+        - name: BROKER_URL
+          value: http://broker-service
+        - name: PRIVKEY_FILE
+          value: /run/secrets/broker.priv.pem
+        volumeMounts:
+        - mountPath: /run/secrets
+          readOnly: true
+          name: certs
+      # volumes:
+      # - name: certs
+      #   secret:
+      #     secretName: pki-secret
+      volumes:
+      - name: certs
+        projected:
+          sources:
+          - secret:
+              name: pki-secret
+          - secret:
+              name: root-crt-pem
+          - secret:
+              name: broker-priv-pem
+
+      # volumes:  
+      # - name: broker-certs-vol
+      #   projected
+      #     sources:
+      #     - secret:
+      #       name: broker-certs-secret
+      #     - secret:
+      #       name: pki-secret
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: broker-service
+  labels:
+    app: broker
+spec:
+  selector:
+    app: broker
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080

@@ -1,0 +1,76 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: proxy-pem-secret
+data:
+  proxy.pem: your-proxy-pem-cert-enc-base64
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: beam-proxy-deployment
+  labels:
+    app: beam-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: beam-proxy
+  template:
+    metadata:
+      labels:
+        app: beam-proxy
+    spec:
+      containers:
+      - name: beam-proxy
+        image: docker.verbis.dkfz.de/cache/samply/beam-proxy:develop
+        env:
+        - name: APP_focus_KEY
+          valueFrom: 
+            secretKeyRef:
+              name: spot-beam-secret
+              key: BEAM_SECRET
+        - name: BROKER_URL
+          value: http://broker-service:8080
+        - name: PROXY_ID
+          value: beam-proxy.broker-service
+        - name: PRIVKEY_FILE
+          value: /run/secrets/proxy.pem
+        - name: ALL_PROXY
+          value: ${http_proxy}
+        volumeMounts:
+        - mountPath: /run/secrets
+          readOnly: true
+          name: certs
+      # volumes:
+      # - name: certs
+      #   secret:
+      #     secretName: pki-secret
+      volumes:
+      - name: certs
+        projected:
+          sources:
+          - secret:
+              name: proxy-pem-secret
+          - secret:
+              name: root-crt-pem
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: beam-proxy-service
+  labels:
+    app: beam-proxy
+spec:
+  selector:
+    app: beam-proxy
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      
+---

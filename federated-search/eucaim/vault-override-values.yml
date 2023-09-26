@@ -1,0 +1,112 @@
+# Vault Helm Chart Value Overrides
+global:
+  enabled: true
+  tlsDisable: true
+
+injector:
+  enabled: true
+  # Use the Vault K8s Image https://github.com/hashicorp/vault-k8s/
+  image:
+    repository: "hashicorp/vault-k8s"
+    tag: "1.3.0"
+
+  resources:
+      requests:
+        memory: 256Mi
+        cpu: 250m
+      limits:
+        memory: 256Mi
+        cpu: 250m
+
+server:
+  image:
+    repository: "hashicorp/vault"
+    tag: "1.14.3"
+
+  resources:
+    requests:
+      memory: 4Gi
+      cpu: 1000m
+    limits:
+      memory: 4Gi
+      cpu: 2000m
+
+  readinessProbe:
+    enabled: true
+    path: "/v1/sys/health?standbyok=true&sealedcode=204&uninitcode=204"
+  livenessProbe:
+    enabled: true
+    path: "/v1/sys/health?standbyok=true"
+    initialDelaySeconds: 60
+
+  # extraEnvironmentVars is a list of extra environment variables to set with the stateful set. These could be
+  # used to include variables required for auto-unseal.
+  # extraEnvironmentVars:
+  #   VAULT_CACERT: /vault/userconfig/tls-ca/ca.crt
+  #   VAULT_SKIP_VERIFY: true
+
+  # extraVolumes is a list of extra volumes to mount. These will be exposed
+  # to Vault in the path `/vault/userconfig/<name>/`.
+  # extraVolumes:
+  #   - type: secret
+  #     name: tls-server
+  #   - type: secret
+  #     name: tls-ca
+  #   - type: secret
+  #     name: kms-creds
+
+  # This configures the Vault Statefulset to create a PVC for audit logs.
+  # See https://www.vaultproject.io/docs/audit/index.html to know more
+  auditStorage:
+    enabled: true
+    size: 1Gi
+    storageClass: nfs-vault
+    mountPath: /vault/audit
+    accessMode: ReadWriteMany
+
+  dataStorage:
+    enabled: true
+    size: 10Gi
+    storageClass: nfs-vault
+    mountPath: /vault/file
+    accessMode: ReadWriteMany
+
+
+  standalone:
+    enabled: false
+
+  # Run Vault in "HA" mode.
+  ha:
+    enabled: true
+    replicas: 1
+    raft:
+      enabled: true
+      setNodeId: true
+
+      config: |
+        storage "raft" {
+          path    = "/vault/file"
+          node_id = "node1"
+        }
+
+        listener "tcp" {
+          address     = "0.0.0.0:8200"
+          tls_disable = "true"
+          http_idle_timeout = "30s"
+        }
+
+        api_addr = "http://0.0.0.0:8200"
+        cluster_addr = "https://127.0.0.1:8200"
+        ui = true
+
+# Vault UI
+ui:
+  enabled: true
+  serviceType: "LoadBalancer"
+  serviceNodePort: null
+  externalPort: 8200
+
+  # For Added Security, edit the below
+  #loadBalancerSourceRanges:
+  #   - < Your IP RANGE Ex. 10.0.0.0/16 >
+  #   - < YOUR SINGLE IP Ex. 1.78.23.3/32 >

@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lens-deployment
+  labels:
+    app: lens
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lens
+  template:
+    metadata:
+      labels:
+        app: lens
+    spec:
+      containers:
+      - name: lens
+        image: docker.verbis.dkfz.de/eucaim/lens:eucaim
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: lens-service
+  labels:
+    app: lens
+spec:
+  selector:
+    app: lens
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      
+---

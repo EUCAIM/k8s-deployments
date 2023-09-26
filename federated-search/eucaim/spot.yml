@@ -1,0 +1,52 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spot-deployment
+  labels:
+    app: spot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spot
+  template:
+    metadata:
+      labels:
+        app: spot
+    spec:
+      containers:
+      - name: spot
+        image: docker.verbis.dkfz.de/ccp-private/central-spot
+        env:
+        - name: BEAM_SECRET
+          valueFrom: 
+            secretKeyRef:
+              name: spot-beam-secret
+              key: BEAM_SECRET
+        - name: BEAM_URL
+          value: http://beam-proxy:8081
+        - name: BEAM_PROXY_ID
+          value: beam-proxy
+        - name: BEAM_BROKER_ID
+          value: http://broker-service:8080
+        - name: BEAM_APP_ID
+          value: focus
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: spot-service
+  labels:
+    app: spot
+spec:
+  selector:
+    app: spot
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      
+---
