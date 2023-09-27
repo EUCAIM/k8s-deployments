@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: responder-deployment
+  labels:
+    app: responder
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: responder
+  template:
+    metadata:
+      labels:
+        app: responder
+    spec:
+      containers:
+      - name: responder
+        image: docker.verbis.dkfz.de/eucaim/responder:chaimeleon
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: responder-service
+  labels:
+    app: responder
+spec:
+  selector:
+    app: responder
+  ports:
+    - protocol: TCP
+      port: 1337
+      targetPort: 1337
+      
+---

@@ -1,0 +1,6 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: app1-key-secret
+data:
+  APP1_KEY: insert-a-random-passphrase-here-enc-base64
