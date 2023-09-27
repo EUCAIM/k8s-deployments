@@ -1,0 +1,77 @@
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: eucaim-ingress
+  namespace: mockup
+  uid: 1ccbb023-8e1b-48af-836c-6500e107bf6b
+  resourceVersion: '9880603'
+  generation: 5
+  creationTimestamp: '2023-09-18T08:13:45Z'
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    nginx.ingress.kubernetes.io/configuration-snippet: >
+      add_header Access-Control-Allow-Methods "POST, GET, OPTIONS";
+
+      add_header Access-Control-Allow-Credentials true;
+
+      add_header Access-Control-Allow-Origin
+      'https://dashboard.eucaim.cancerimage.eu/';
+
+      add_header Access-Control-Allow-Headers
+      'Authorization,Accept,Origin,DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range';
+
+      add_header Access-Control-Allow-Methods
+      'GET,POST,OPTIONS,PUT,DELETE,PATCH';
+    nginx.ingress.kubernetes.io/enable-cors: 'true'
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+  managedFields:
+    - manager: nginx-ingress-controller
+      operation: Update
+      apiVersion: networking.k8s.io/v1
+      time: '2023-09-18T08:14:39Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:status:
+          f:loadBalancer:
+            f:ingress: {}
+      subresource: status
+    - manager: dashboard
+      operation: Update
+      apiVersion: networking.k8s.io/v1
+      time: '2023-09-27T09:46:00Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            .: {}
+            f:cert-manager.io/cluster-issuer: {}
+            f:kubernetes.io/ingress.class: {}
+            f:nginx.ingress.kubernetes.io/backend-protocol: {}
+            f:nginx.ingress.kubernetes.io/configuration-snippet: {}
+            f:nginx.ingress.kubernetes.io/enable-cors: {}
+            f:nginx.ingress.kubernetes.io/use-regex: {}
+        f:spec:
+          f:rules: {}
+          f:tls: {}
+spec:
+  tls:
+    - hosts:
+        - dashboard.eucaim.cancerimage.eu
+      secretName: dashboard.eucaim.cancerimage.eu
+  rules:
+    - host: dashboard.eucaim.cancerimage.eu
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: dashb-node-service
+                port:
+                  number: 8080
+status:
+  loadBalancer:
+    ingress:
+      - ip: 10.0.0.9
