@@ -1,0 +1,59 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: eucaim-dashboard-deployment
+  labels:
+    app: eucaim-dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eucaim-dashboard
+  template:
+    metadata:
+      labels:
+        app: eucaim-dashboard
+    spec:
+      containers:
+         - name: node-dashboard
+           image: eucaim.cancerimage.eu:10443/library/nodejs
+           command:
+            - /data/runApp.sh
+           ports:
+            - containerPort: 8080
+              protocol: TCP
+           resources: 
+             requests: 
+               cpu: 2
+               memory: 4Gi
+           volumeMounts:
+            - name: node-vol
+              mountPath: /data
+            - name: kube-api-access-57p52
+              readOnly: true
+              mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+           terminationMessagePath: /dev/termination-log
+           terminationMessagePolicy: File
+           imagePullPolicy: Always
+      volumes:
+        - name: node-vol
+          persistentVolumeClaim:
+            claimName: node-vol-pvc
+        - name: kube-api-access-57p52
+          projected:
+            sources:
+              - serviceAccountToken:
+                  expirationSeconds: 3607
+                  path: token
+              - configMap:
+                  name: kube-root-ca.crt
+                  items:
+                    - key: ca.crt
+                      path: ca.crt
+              - downwardAPI:
+                  items:
+                    - path: namespace
+                      fieldRef:
+                        apiVersion: v1
+                        fieldPath: metadata.namespace
+            defaultMode: 420
