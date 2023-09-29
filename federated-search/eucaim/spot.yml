@@ -1,3 +1,25 @@
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: explorer-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    nginx.ingress.kubernetes.io/rewrite-target: /$
+spec:
+  rules:
+    - host: explorer.eucaim.cancerimage.eu
+      http:
+        paths:
+          - path: /backend/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: spot-service
+                port:
+                  number: 80
+
+---
 
 apiVersion: apps/v1
 kind: Deployment
@@ -17,7 +39,15 @@ spec:
     spec:
       containers:
       - name: spot
-        image: docker.verbis.dkfz.de/ccp-private/central-spot
+        image: docker.verbis.dkfz.de/eucaim/spot:eucaim
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: 250m
+            memory: 4Gi
+          limits: 
+            cpu: 1
+            memory: 4Gi
         env:
         - name: BEAM_SECRET
           valueFrom: 
@@ -25,11 +55,11 @@ spec:
               name: spot-beam-secret
               key: BEAM_SECRET
         - name: BEAM_URL
-          value: http://beam-proxy:8081
+          value: http://beam-proxy-service:8081
         - name: BEAM_PROXY_ID
-          value: beam-proxy
+          value: eucaim.broker.eucaim.cancerimage.eu
         - name: BEAM_BROKER_ID
-          value: http://broker-service:8080
+          value: broker.eucaim.cancerimage.eu
         - name: BEAM_APP_ID
           value: focus
 
