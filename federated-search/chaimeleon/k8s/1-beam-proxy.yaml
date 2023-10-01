@@ -1,12 +1,3 @@
-apiVersion: v1
-kind: Secret
-metadata:
-  name: proxy-pem-secret
-data:
-  proxy.pem: your-proxy-pem-cert-enc-base64
-
----
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -30,12 +21,12 @@ spec:
         - name: APP_focus_KEY
           valueFrom: 
             secretKeyRef:
-              name: app1-key-secret
+              name: app1-key
               key: APP1_KEY
         - name: BROKER_URL
           value: https://broker.eucaim.cancerimage.eu
         - name: PROXY_ID
-          value: beam-proxy
+          value: chaimeleon.broker.eucaim.cancerimage.eu
         - name: PRIVKEY_FILE
           value: /run/secrets/proxy.pem
         - name: BIND_ADDR
@@ -44,21 +35,26 @@ spec:
         - mountPath: /run/secrets
           readOnly: true
           name: certs
-      # volumes:
-      # - name: certs
-      #   secret:
-      #     secretName: pki-secret
+        ports:
+          - containerPort: 8081
+            name: pport
+        resources:
+          requests:
+            memory: "100Mi"
+            cpu: "50m"
       volumes:
       - name: certs
         projected:
           sources:
           - secret:
-              name: proxy-pem-secret
+              name: proxy-pem
           - secret:
               name: root-crt-pem
+      priorityClassName: core-services
+      nodeSelector: 
+        chaimeleon.eu/target: core-services
 
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -71,6 +67,4 @@ spec:
   ports:
     - protocol: TCP
       port: 8081
-      targetPort: 8081
-      
----
+      targetPort: pport

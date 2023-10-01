@@ -1,0 +1,4 @@
+logs/*
+bak/*
+*.private.yaml
+cert/chaimeleon.priv.pem

@@ -1,34 +1,34 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: beam-proxy-deployment
+  name: focus-deployment
   labels:
-    app: beam-proxy
+    app: focus
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: beam-proxy
+      app: focus
   template:
     metadata:
       labels:
-        app: beam-proxy
+        app: focus
     spec:
       containers:
-      - name: beam-proxy
-        image: samply/beam-proxy:develop
+      - name: focus
+        image: docker.verbis.dkfz.de/eucaim/focus:eucaim
         env:
         - name: API_KEY
           valueFrom: 
             secretKeyRef:
-              name: app1-key-secret
+              name: app1-key
               key: APP1_KEY
         - name: BEAM_PROXY_URL
           value: http://beam-proxy-service:8081
         - name: BEAM_APP_ID_LONG
-          value: focus.beam-proxy
+          value: focus.chaimeleon.broker.eucaim.cancerimage.eu
         - name: RETRY_COUNT
-          value: 10
+          value: "10"
         - name: ENDPOINT_URL
           value: http://responder-service:1337
         - name: ENDPOINT_TYPE
@@ -37,21 +37,10 @@ spec:
           value: CHAIMELEON
         - name: PROVIDER_ICON
           value: "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"
-
----
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: focus-service
-  labels:
-    app: focus
-spec:
-  selector:
-    app: focus
-  ports:
-    - protocol: TCP
-      port: 8080
-      targetPort: 8080
-      
----
+        resources:
+          requests:
+            memory: "100Mi"
+            cpu: "50m"
+      priorityClassName: core-services
+      nodeSelector: 
+        chaimeleon.eu/target: core-services

@@ -17,9 +17,17 @@ spec:
       containers:
       - name: responder
         image: docker.verbis.dkfz.de/eucaim/responder:chaimeleon
-
+        ports:
+          - containerPort: 1337
+            name: rport
+        resources:
+          requests:
+            memory: "100Mi"
+            cpu: "50m"
+      priorityClassName: core-services
+      nodeSelector: 
+        chaimeleon.eu/target: core-services
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -32,6 +40,4 @@ spec:
   ports:
     - protocol: TCP
       port: 1337
-      targetPort: 1337
-      
----
+      targetPort: rport
