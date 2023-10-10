@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: negotiator
+spec:
+  replicas: 1
+  minReadySeconds: 30
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      service: negotiator
+  template:
+    metadata:
+      labels:
+        service: negotiator
+    spec:  
+      containers:
+      - name: negotiator
+        image: eucaim.cancerimage.eu:10443/library/negotiator-v2-eucaim:2.8.3
+        imagePullPolicy: Always
+        securityContext:
+          runAsUser: 1001
+        ports:
+        - containerPort: 8080
+        env: 
+        - name: POSTGRES_HOST
+          value: "negotiator-db"
+        - name: NEGOTIATOR_URL
+          value: "https://negotiator.eucaim.cancerimage.eu"
+        - name: AUTH_HOST
+          value: "https://login.bbmri-eric.eu"
+        - name: AUTH_PUBLIC_KEY
+          value: "XX"
+        - name: AUTH_CLIENT_ID
+          value: "xxxx"
+        - name: AUTH_CLIENT_SECRET
+          value: "xxxx"
+        resources:
+          requests:
+            cpu: "125m"
+            memory: "512Mi"
+          limits:
+            cpu: "0.2"
+            memory: "1Gi"
+      volumes:  
+      - name: data
+        persistentVolumeClaim:
+          claimName: negotiator-db-pvc
