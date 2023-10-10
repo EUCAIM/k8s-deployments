@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: negotiator-db-pvc
+spec:
+  storageClassName: nfs-negotiator-db
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 100M

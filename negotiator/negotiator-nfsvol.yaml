@@ -1,0 +1,16 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: negotiator-db-vol
+  labels:
+    type: local
+spec:
+  storageClassName: nfs-negotiator-db
+  persistentVolumeReclaimPolicy: Recycle
+  capacity:
+    storage: 150M
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: 10.0.0.9
+    path: /mnt/nfs_share/negotiator/db

@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: negotiator-db
+spec:
+  replicas: 1
+  minReadySeconds: 30
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      service: negotiator-db
+  template:
+    metadata:
+      labels:
+        service: negotiator-db
+    spec:
+      containers:
+      - name: negotiator-db
+        image: bitnami/postgresql:14
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          value: "negotiator"
+        - name: POSTGRES_USER
+          value: "negotiator"
+        - name: POSTGRES_PASSWORD
+          value: "negotiator"
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/postgresql/data
+          subPath: data
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+          limits:
+            cpu: 0.5
+            memory: "1Gi"
+        securityContext:
+          runAsUser: 999
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: negotiator-db-pvc
