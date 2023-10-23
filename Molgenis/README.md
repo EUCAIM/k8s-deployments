@@ -30,6 +30,8 @@ We have improved the accessibility of our pods by implementing Ingress routes, w
 
 ## Previous Configuration
 
+First of all, if you want to deploy the NFS Persistent Volumes, you may need to add the IP address of your NFS server at `deployment-nfsvols-template.yaml`.
+
 **Ingress Configuration**
 
  
@@ -54,7 +56,7 @@ Deployment is a bit tricky, as Molgenis is not intended to work within K8s, as s
 
  
 
-First step is to deploy the NFS Persistent Volumes using the `deployment-nfsvols.yaml` file. **You have to update the NFS server IP in this file before**. Once the NFS PVs have been created, the Persistent Volume Claims can be created using the `deployment-nfspvc.yaml` file. NFS should be installed in advanced, and exposed only through the private IP of the cluster (you can use the `nfs_install.sh`script).
+First step is to deploy the NFS Persistent Volumes using the `deployment-nfsvols-template.yaml` file. **You have to update the NFS server IP in this file before**. Once the NFS PVs have been created, the Persistent Volume Claims can be created using the `deployment-nfspvc.yaml` file. NFS should be installed in advanced, and exposed only through the private IP of the cluster (you can use the `nfs_install.sh`script).
 
  
 
