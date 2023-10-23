@@ -525,11 +525,11 @@ spec:
   #  - catalogue.ramses.i3m.upv.es
   #  secretName: catalogue.ramses.i3m.upv.es
   - hosts:
-    - catalogue.eucaim.cancerimage.eu
-    secretName: catalogue.eucaim.cancerimage.eu
+    - catalogue-eucaim.ramses.i3m.upv.es
+    secretName: catalogue-eucaim.ramses.i3m.upv.es
 
   rules:
-    - host: catalogue.eucaim.cancerimage.eu
+    - host: catalogue-eucaim.ramses.i3m.upv.es
       http:
         paths:
           - path: /
