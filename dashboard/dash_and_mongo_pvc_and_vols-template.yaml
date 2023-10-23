@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dashb-mongo-vol-pvc
+  namespace: mockup
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 50M
+  storageClassName: nfs-dashb-mongo
+  volumeName: dashb-mongo-vol
+status:
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: 150M
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: node-vol-pvc
+  namespace: mockup
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 50M
+  storageClassName: nfs-node
+  volumeName: node-vol
+status:
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: 150M
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: node-vol
+spec:
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: 150M
+  nfs:
+    path: /mnt/nfs_share2/mockup/node
+    server: X.X.X.X
+  persistentVolumeReclaimPolicy: Recycle
+  storageClassName: nfs-node
+  volumeMode: Filesystem
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: dashb-mongo-vol
+spec:
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: 150M
+  nfs:
+    path: /mnt/nfs_share2/mockup/dashboard/mongo
+    server: X.X.X.X
+  persistentVolumeReclaimPolicy: Recycle
+  storageClassName: nfs-dashb-mongo
+  volumeMode: Filesystem
