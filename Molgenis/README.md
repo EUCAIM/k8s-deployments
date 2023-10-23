@@ -30,7 +30,7 @@ We have improved the accessibility of our pods by implementing Ingress routes, w
 
 ## Previous Configuration
 
-First of all, if you want to deploy the NFS Persistent Volumes, you may need to add the IP address of your NFS server at `deployment-nfsvols-template.yaml`.
+First of all, if you want to deploy the NFS Persistent Volumes, you may need to add the IP address of your NFS server in the files `deployment-nfsvols-template.yaml` and `nginx-vol-template.yaml`.
 
 **Ingress Configuration**
 
