@@ -28,7 +28,7 @@ All the services are deployed under a specific namespace (not hard-coded in the 
 
 We have improved the accessibility of our pods by implementing Ingress routes, which offer several benefits, including simplified configuration and better handling of redirects.
 
- 
+##Previous Configuration
 
 **Ingress Configuration**
 
