@@ -12,7 +12,7 @@ spec:
   accessModes:
     - ReadWriteMany
   nfs:
-    server: 10.0.0.9
+    server: X.X.X.X
     path: /mnt/nfs_share/mockup
     readOnly: false
 ---
