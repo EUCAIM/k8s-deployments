@@ -30,7 +30,7 @@ All the services are deployed under a specific namespace (not hard-coded in the 
 
 <br>
 
-![Uploading image.png…]()
+<img width="713" alt="image" src="https://github.com/EUCAIM/k8s-deployments/assets/100042312/15e9be35-af9a-4962-87e7-679276ca3747">
 
  <br>
 
