@@ -27,7 +27,7 @@ All the services are deployed under a specific namespace (not hard-coded in the 
 <br>
 
 <img width="705" alt="image" src="https://github.com/EUCAIM/k8s-deployments/assets/100042312/5e91761c-84a6-46e6-a49d-cfb868cfefa9">
-
+<br>
 <br>
 
 <img width="713" alt="image" src="https://github.com/EUCAIM/k8s-deployments/assets/100042312/15e9be35-af9a-4962-87e7-679276ca3747">
