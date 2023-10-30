@@ -25,7 +25,7 @@ All the services are deployed under a specific namespace (not hard-coded in the 
 5 of these Deployments (molgenis, postgres, minio, elasticsearch and kibana-dashboard) require one or several persistent volumes. These persistent volumes are implemented through NFS volumes that are exposed on a server in the same private network (in UPV's deployment, this server is the front-end of the K8s cluster). The volumes are accessed through Persistent Volume Claims. The frontend deployment mounts a config file (`/etc/nginx/proxy.d/backend.conf`) through a ConfigMap file. 
 
 <img width="699" alt="image" src="https://github.com/EUCAIM/k8s-deployments/assets/100042312/536f5518-99ee-4781-b527-8eea42b6a454"> <p align=center>Image 1</p>
-<img width="708" alt="image" src="https://github.com/EUCAIM/k8s-deployments/assets/100042312/cc3cf213-5a35-4454-ae64-36969edff29d"> Image 2 
+<img width="708" alt="image" src="https://github.com/EUCAIM/k8s-deployments/assets/100042312/cc3cf213-5a35-4454-ae64-36969edff29d"> <p align=center>Image 2</p>
 
 
  
