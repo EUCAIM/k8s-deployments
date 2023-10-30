@@ -23,6 +23,7 @@ All the services are deployed under a specific namespace (not hard-coded in the 
  
 
 5 of these Deployments (molgenis, postgres, minio, elasticsearch and kibana-dashboard) require one or several persistent volumes. These persistent volumes are implemented through NFS volumes that are exposed on a server in the same private network (in UPV's deployment, this server is the front-end of the K8s cluster). The volumes are accessed through Persistent Volume Claims. The frontend deployment mounts a config file (`/etc/nginx/proxy.d/backend.conf`) through a ConfigMap file. 
+We have improved the accessibility of our pods by implementing Ingress routes, which offer several benefits, including simplified configuration and better handling of redirects.
 <br>
 <br>
 
@@ -35,7 +36,7 @@ All the services are deployed under a specific namespace (not hard-coded in the 
 <br>
 <br>
 
-We have improved the accessibility of our pods by implementing Ingress routes, which offer several benefits, including simplified configuration and better handling of redirects.
+
 
 ## Previous Configuration
 
