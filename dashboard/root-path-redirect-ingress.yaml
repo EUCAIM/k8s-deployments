@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/permanent-redirect: https://dashboard-eucaim.ramses.i3m.upv.es/
+  generation: 2
+  name: root-path-redirect
+  namespace: mockup
+spec:
+  rules:
+  - host: ramses.i3m.upv.es
+    http:
+      paths:
+      - backend:
+          service:
+            name: dashb-node-service
+            port:
+              number: 8080
+        path: /?
+        pathType: ImplementationSpecific
