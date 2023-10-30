@@ -21,6 +21,7 @@ Prior to deploy the service, the following changes should be applied:
 
 <img width="704" alt="image" src="https://github.com/EUCAIM/k8s-deployments/assets/100042312/34580878-7835-41d7-aac1-a522fe4f310b">
 
+<br>
 ## Deployment
 
 Deploy the components in this order.
