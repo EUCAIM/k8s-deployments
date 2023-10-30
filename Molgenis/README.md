@@ -26,10 +26,13 @@ All the services are deployed under a specific namespace (not hard-coded in the 
 <br>
 <br>
 
-<img width="699" alt="image" src="https://github.com/EUCAIM/k8s-deployments/assets/100042312/536f5518-99ee-4781-b527-8eea42b6a454">
+<img width="705" alt="image" src="https://github.com/EUCAIM/k8s-deployments/assets/100042312/5e91761c-84a6-46e6-a49d-cfb868cfefa9">
+
 <br>
-<img width="708" alt="image" src="https://github.com/EUCAIM/k8s-deployments/assets/100042312/cc3cf213-5a35-4454-ae64-36969edff29d"> 
- 
+
+![Uploading image.png…]()
+
+ <br>
 
 We have improved the accessibility of our pods by implementing Ingress routes, which offer several benefits, including simplified configuration and better handling of redirects.
 
