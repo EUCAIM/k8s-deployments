@@ -17,6 +17,8 @@ Prior to deploy the service, the following changes should be applied:
 - Update the `negotiator-ingress.yaml` with the correct DNS in the references to the `spec.tls.hosts`, `spec.tls.secretName` and `spec.rules.host`.
 - Create a certificate to the service, as described in the other sections of this repository.
 
+<br>
+
 <img width="704" alt="image" src="https://github.com/EUCAIM/k8s-deployments/assets/100042312/34580878-7835-41d7-aac1-a522fe4f310b">
 
 ## Deployment
