@@ -1,4 +1,4 @@
-##EUCAIM architechture
+## EUCAIM architechture
 **Lens and Spot Deployment:** Lens and Spot are deployed in the same environment and share the same ingress.
 **Spot as a Backend for Lens:** Spot functions as a backend service for Lens.
 **Connection to the Broker through the Beam Proxy:** Both Lens and Spot connect to the Broker through the Beam Proxy. The Beam Proxy acts as an intermediary for requests from clients seeking resources from the Broker.
