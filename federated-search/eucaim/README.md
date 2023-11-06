@@ -1,4 +1,4 @@
-## EUCAIM architechture\
+## EUCAIM architechture
 <br \>
 **Lens and Spot Deployment:** Lens and Spot are deployed in the same environment and share the same ingress.\
 **Spot as a Backend for Lens:** Spot functions as a backend service for Lens.\
