@@ -6,5 +6,5 @@
 
 This architecture allows for efficient data flow and secure access to necessary resources.
 
-!Architecture Diagram
-deployments/assets/100042312/17c7a4d5-c3b2-471a-88ea-8fff9d48a202">
+<img width="557" alt="image" src="https://github.com/EUCAIM/k8s-deployments/assets/100042312/e99505b3-f89a-4284-a18e-db7a15e28fd4">
+
