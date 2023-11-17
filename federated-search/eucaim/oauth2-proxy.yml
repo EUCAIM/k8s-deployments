@@ -56,7 +56,7 @@ spec:
         - --cookie-httponly="true"
         env:
         - name: OAUTH2_PROXY_CLIENT_ID
-          value: <Client ID>
+          value: APP-776CE0AA-ED20-4102-92D6-4869ABDD6963
         - name: OAUTH2_PROXY_CLIENT_SECRET
           valueFrom:
             secretKeyRef:
