@@ -17,6 +17,7 @@ spec:
       containers:
       - name: focus
         image: docker.verbis.dkfz.de/eucaim/focus:eucaim
+        imagePullPolicy: Always
         env:
         - name: API_KEY
           valueFrom: 
@@ -30,7 +31,13 @@ spec:
         - name: RETRY_COUNT
           value: "10"
         - name: ENDPOINT_URL
-          value: http://responder-service:1337
+          #value: http://responder-service:1337
+          value: http://dataset-service-backend-service.dataset-service.svc.cluster.local:11000/api/datasets/eucaimSearch
+        - name: AUTH_HEADER
+          valueFrom: 
+            secretKeyRef:
+              name: api-keys
+              key: DATASET_SERVICE_AUTH_HEADER
         - name: ENDPOINT_TYPE
           value: omop
         - name: PROVIDER

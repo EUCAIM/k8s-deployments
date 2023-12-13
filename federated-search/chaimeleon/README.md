@@ -39,6 +39,7 @@ cp k8s/0-secret-certs.yaml k8s/0-secret-certs.private.yaml
 
  - In the secret in file `0-secret-api-keys.private.yaml`: 
    - `FOCUS_API_KEY` is the secret token for the app (focus) to communicate with the beam-proxy, just generate one randomly.
+   - `DATASET_SERVICE_AUTH_HEADER` is the secret token for the app (focus) to communicate with the dataset-service, it is provided by the admin of that service.
  - In the secret in file `0-secret-certs.private.yaml`: 
    - `proxy.pem` is the private key generated previously for the beam-proxy to communicate with the beam-broker.
    - `root.crt.pem` is the public key of the beam-broker at central side, it is provided by the admin of that beam-broker.
@@ -51,7 +52,12 @@ kubectl apply -f k8s/0-secret-certs.private.yaml -n eucaim-fed-search
 
 And finally you are able to deploy the services in order:
 ```console
-kubectl apply -f k8s/1-beam-proxy.yaml
-kubectl apply -f k8s/2-focus.yaml
-kubectl apply -f k8s/3-responder.yaml
+kubectl apply -f k8s/1-beam-proxy.yaml -n eucaim-fed-search
+kubectl apply -f k8s/2-focus.yaml -n eucaim-fed-search
+```
+
+---
+\[Optional\] Additionally you can deploy a fake data responder (only for development purposes)
+```console
+kubectl apply -f k8s/3-responder.yaml -n eucaim-fed-search
 ```
