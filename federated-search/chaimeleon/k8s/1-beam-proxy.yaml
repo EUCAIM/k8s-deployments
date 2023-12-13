@@ -21,8 +21,8 @@ spec:
         - name: APP_focus_KEY
           valueFrom: 
             secretKeyRef:
-              name: app1-key
-              key: APP1_KEY
+              name: api-keys
+              key: FOCUS_API_KEY
         - name: BROKER_URL
           value: https://broker.eucaim.cancerimage.eu
         - name: PROXY_ID
@@ -44,12 +44,8 @@ spec:
             cpu: "50m"
       volumes:
       - name: certs
-        projected:
-          sources:
-          - secret:
-              name: proxy-pem
-          - secret:
-              name: root-crt-pem
+        secret:
+          secretName: certs
       priorityClassName: core-services
       nodeSelector: 
         chaimeleon.eu/target: core-services

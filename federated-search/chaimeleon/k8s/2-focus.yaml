@@ -21,8 +21,8 @@ spec:
         - name: API_KEY
           valueFrom: 
             secretKeyRef:
-              name: app1-key
-              key: APP1_KEY
+              name: api-keys
+              key: FOCUS_API_KEY
         - name: BEAM_PROXY_URL
           value: http://beam-proxy-service:8081
         - name: BEAM_APP_ID_LONG
