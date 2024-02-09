@@ -37,6 +37,7 @@ spec:
       - args:
         - --provider=oidc
         - --provider-display-name="LifeScience AAI"
+        - --prompt='none
         - --redirect-url="https://explorer.eucaim.cancerimage.eu/oauth2/callback"
         - --oidc-issuer-url=$ISSUER URL
         - --scope="openid email profile"
