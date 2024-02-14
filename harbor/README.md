@@ -32,7 +32,15 @@ Now make a private copy of the values file and change it for your preferences.
 ```console
 cp values.yaml values.private.yaml
 ```
-Finally, you can deploy Harbor:
+
+If you set `expose.type: nodePort`, and `expose.tls.certSource: secret`, then you must ensure the certificate in that secret is renewed when expires.
+In our case the certificate for the domain is renewed automatically in another namespace: `kubernetes-dashboard`, 
+so we have to copy every time the secret from there to this namespace `harbor`, and we can achieve that with a cronjob:
+```console
+kubectl apply -f copy-cert-secret-cronjob.yaml
+```
+
+Now you can deploy Harbor:
 ```console
 helm repo add harbor https://helm.goharbor.io
 helm repo update harbor
@@ -48,3 +56,22 @@ helm install harbor --namespace harbor  -f values.private.yaml harbor/harbor --v
 
 As soon as all components are running, Harbor portal should be available at https://eucaim.cancerimage.eu:10433.
 
+Finally we must ensure the nginx pod will be regenerated when the certificate expires in order to reload the new certificate from the secret.
+So we can change the nginx deployment...
+```console
+kubectl edit deployment harbor-nginx -n harbor
+```
+and change the livenessProbe of the container to use the `curl` command instead of the `httpget` method (which does not check the certificate).
+It should be like this:
+```
+          livenessProbe:
+            exec:
+              command:
+                - curl
+                - https://eucaim.cancerimage.eu:10443/
+            initialDelaySeconds: 300
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+```
