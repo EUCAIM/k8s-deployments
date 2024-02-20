@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: negotiator-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: negotiator-frontend
+  template:
+    metadata:
+      labels:
+        app: negotiator-frontend
+    spec:
+      containers:
+      - name: negotiator-frontend
+        image: bbmrieric/negotiator-frontend:latest
+        imagePullPolicy: Always
+        env:
+          - name: AUTH_URL
+            value: "https://login.bbmri-eric.eu/oidc"
+            # value: "https://proxy.aai.lifescience-ri.eu"
+          - name: CLIENT_ID
+            value: "a15a95d1-b251-4f12-b608-76ec02c68010"
+          - name: REDIRECT_URI
+            value: "https://negotiator.eucaim.cancerimage.eu/logged-in"
+          - name: LOGOUT_URI
+            value: "https://negotiator.eucaim.cancerimage.eu"
+          - name: API_RESOURCES
+            #value: "https://negotiator-v3.bbmri-eric.eu"
+            value: "https://negotiator.eucaim.cancerimage.eu"
+        ports:
+          - containerPort: 8080
