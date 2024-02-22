@@ -37,10 +37,10 @@ spec:
       - args:
         - --provider=oidc
         - --provider-display-name="LifeScience AAI"
-        - --prompt='none
+        - --prompt='none'
         - --redirect-url="https://explorer.eucaim.cancerimage.eu/oauth2/callback"
-        - --oidc-issuer-url=$ISSUER URL
-        - --scope="openid email profile"
+        - --oidc-issuer-url=https://proxy.aai.lifescience-ri.eu
+        - --scope="openid email profile eduperson_entitlement"
         - --code-challenge-method="S256"
         - --skip-provider-button="true"
         - --pass-basic-auth="true"
