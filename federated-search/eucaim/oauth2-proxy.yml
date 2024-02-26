@@ -15,7 +15,8 @@ spec:
           backend:
             service:
               name: oauth2-proxy-service
-              port: 4180
+              port: 
+                number: 4180
 ---
 apiVersion: apps/v1
 kind: Deployment
