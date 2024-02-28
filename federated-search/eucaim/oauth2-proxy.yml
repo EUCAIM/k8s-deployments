@@ -38,24 +38,24 @@ spec:
       - args:
         - --provider=oidc
         - --provider-display-name="LifeScience AAI"
-        - --prompt='none'
-        - --redirect-url="https://explorer.eucaim.cancerimage.eu/oauth2/callback"
+        - --prompt=none
+        - --redirect-url=https://explorer.eucaim.cancerimage.eu/oauth2/callback
         - --oidc-issuer-url=https://proxy.aai.lifescience-ri.eu
         - --scope="openid email profile eduperson_entitlement"
-        - --code-challenge-method="S256"
-        - --skip-provider-button="true"
-        - --pass-basic-auth="true"
-        - --pass-access-token="true"
-        - --pass-user-headers="false"
+        - --code-challenge-method=S256
+        - --skip-provider-button=true
+        - --pass-basic-auth=true
+        - --pass-access-token=true
+        - --pass-user-headers=false
         - --email-domain=*
-        - --upstream="static://202"
+        - --upstream=static://202
         - --http-address=0.0.0.0:4180
         - --reverse-proxy=true
         - --whitelist-domain=explorer.eucaim.cancerimage.eu 
-        - --cookie-name="_eucaim_explorer_oauth2"
-        - --cookie-expire="12h"
-        - --cookie-secure="true"
-        - --cookie-httponly="true"
+        - --cookie-name=_eucaim_explorer_oauth2
+        - --cookie-expire=12h
+        - --cookie-secure=true
+        - --cookie-httponly=true
         env:
         - name: OAUTH2_PROXY_CLIENT_ID
           value: APP-776CE0AA-ED20-4102-92D6-4869ABDD6963
