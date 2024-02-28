@@ -66,12 +66,12 @@ spec:
         - name: OAUTH2_PROXY_CLIENT_SECRET
           valueFrom:
             secretKeyRef:
-              name: oauth2-client-secret
+              name: oauth2-secrets
               key: OAUTH2_PROXY_CLIENT_SECRET
         - name: OAUTH2_PROXY_COOKIE_SECRET
           valueFrom:
             secretKeyRef:
-              name: oauth2-cookie-secret
+              name: oauth2-secrets
               key: OAUTH2_PROXY_COOKIE_SECRET
         image: quay.io/oauth2-proxy/oauth2-proxy:latest
         imagePullPolicy: Always
