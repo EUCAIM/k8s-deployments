@@ -24,10 +24,9 @@ spec:
               service:
                 name: spot-service
                 port:
-                  number: 80
+                  number: 8080
 
 ---
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
