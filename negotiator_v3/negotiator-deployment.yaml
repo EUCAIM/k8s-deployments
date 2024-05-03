@@ -16,20 +16,18 @@ spec:
     spec:
       containers:
       - name: negotiator-v3
-        image: bbmrieric/negotiator:latest
+        #image: bbmrieric/negotiator:3.0.3
+        image: bbmrieric/negotiator:3.4.0
         imagePullPolicy: Always
         securityContext:
           runAsUser: 1001
         ports:
-        - containerPort: 8080
+        - containerPort: 8081
         env:
         - name: PROFILE
           value: "debug"
         - name: SPRING_DATASOURCE_URL
-          #value: "jdbc:postgresql://147.251.253.214:5432/negotiator"
-          # SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/negotiator
           value: "jdbc:postgresql://negotiator-v3-db-service:5432/negotiator"
-          #value: "jdbc:postgresql://postgres:5432/negotiator"
         - name: SPRING_DATASOURCE_USERNAME
           value: "negotiator"
         - name: SPRING_DATASOURCE_PASSWORD
@@ -44,7 +42,6 @@ spec:
           value: "negotiator" # Directly specify the password here
         - name: SPRING_FLYWAY_URL
           value: "jdbc:postgresql://negotiator-v3-db-service:5432/negotiator"
-          #value: "jdbc:postgresql://postgres:5432/negotiator"
         - name: NEGOTIATOR_FRONTENDURL
           value: "https://negotiator.eucaim.cancerimage.eu"
         - name: SERVER_FORWARD_HEADERS_STRATEGY
@@ -62,9 +59,9 @@ spec:
         - name: NEGOTIATOR_AUTHORIZATION_SUBJECTCLAIM
           value: "sub"
         - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_OPAQUETOKEN_CLIENT_ID
-          value: "a15a95d1-b251-4f12-b608-76ec02c68010"
+          value: "introduce_your_token"
         - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_OPAQUETOKEN_CLIENT_SECRET
-          value: "33a1c16e-fedb-494a-9bdb-fc79fbbb19e63156db50-89ce-46be-ba24-8c8b362f2344"
+          value: "introduce_your_token"
         - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_OPAQUETOKEN_INTROSPECTION_URI
           value: "https://login.bbmri-eric.eu/oidc/introspect"
         - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_AUDIENCES
@@ -79,6 +76,10 @@ spec:
           value: "https://bbmritestnn.gcc.rug.nl"
         - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_TYPE
           value: "at+jwt"
+        - name: ACTIVE_THEME
+          value: "eucaim"
+        - name: ACTIVE_LOGOS
+          value: "eucaim"
         resources:
           requests:
             cpu: "125m"
