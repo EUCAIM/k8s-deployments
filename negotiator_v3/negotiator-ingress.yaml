@@ -1,7 +1,7 @@
 kind: Ingress
 apiVersion: networking.k8s.io/v1
 metadata:
-  name: negotiator-ingress
+  name: negotiator-frontend-ingress
   namespace: negotiator
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
@@ -23,3 +23,29 @@ spec:
                 name: negotiator-frontend
                 port:
                   number: 8080
+---
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: negotiator-ingress
+  namespace: negotiator
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+spec:
+  tls:
+    - hosts:
+        - negotiator.eucaim.cancerimage.eu
+      secretName: negotiator.eucaim.cancerimage.eu
+  rules:
+    - host:  negotiator.eucaim.cancerimage.eu
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: negotiator-v3-service
+                port:
+                  number: 8081
