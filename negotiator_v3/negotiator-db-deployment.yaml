@@ -26,9 +26,11 @@ spec:
           value: "negotiator"
         - name: POSTGRES_PASSWORD
           value: "negotiator"
+        - name: POSTGRESQL_VOLUME_DIR
+          value: "/bitnami/postgresql"
         volumeMounts:
         - name: data
-          mountPath: /var/lib/postgresql/data
+          mountPath: /bitnami/postgresql
           subPath: data
         resources:
           requests:
