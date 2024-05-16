@@ -5,22 +5,19 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/backend-protocol: HTTP
-    # Fix for: "WARNING: Multiple cookies are required for this session as it exceeds the 4kb cookie limit. 
-    #           Please use server side session storage (eg. Redis) instead."
-    nginx.ingress.kubernetes.io/proxy-buffer-size: "16k"
 spec:
   rules:
-  - host: explorer.eucaim.cancerimage.eu
+  - host: explorer-eucaim.grycap.i3m.upv.es
     http:
       paths:
-        - path: /oauth2/?(.*)
+        #- path: /oauth2/?(.*)
+        - path: /oauth2
           pathType: Prefix
           backend:
             service:
               name: oauth2-proxy-service
-              port: 
+              port:
                 number: 4180
-
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -43,9 +40,9 @@ spec:
         - --provider=oidc
         - --provider-display-name="LifeScience AAI"
         - --prompt=none
-        - --redirect-url=https://explorer.eucaim.cancerimage.eu/oauth2/callback
+        - --redirect-url=https://explorer-eucaim.grycap.i3m.upv.es/oauth2/callback
         - --oidc-issuer-url=https://proxy.aai.lifescience-ri.eu
-        - --scope="openid email profile eduperson_entitlement"
+        - --scope=openid email profile eduperson_entitlement
         - --code-challenge-method=S256
         - --skip-provider-button=true
         - --pass-basic-auth=true
@@ -55,23 +52,27 @@ spec:
         - --upstream=static://202
         - --http-address=0.0.0.0:4180
         - --reverse-proxy=true
-        - --whitelist-domain=explorer.eucaim.cancerimage.eu 
+        - --whitelist-domain=explorer-eucaim.grycap.i3m.upv.es
         - --cookie-name=_eucaim_explorer_oauth2
         - --cookie-expire=12h
         - --cookie-secure=true
         - --cookie-httponly=true
+        - --oidc-groups-claim=eduperson_entitlement
+        - --allowed-group=urn:geant:lifescience-ri.eu:group:lifescience:communities_and_projects:EUCAIM#aai.lifescience-ri.eu
         env:
         - name: OAUTH2_PROXY_CLIENT_ID
           value: APP-776CE0AA-ED20-4102-92D6-4869ABDD6963
         - name: OAUTH2_PROXY_CLIENT_SECRET
           valueFrom:
             secretKeyRef:
-              name: oauth2-secrets
+              name: oauth2-client-secret-new
               key: OAUTH2_PROXY_CLIENT_SECRET
         - name: OAUTH2_PROXY_COOKIE_SECRET
+            # value: hR87RBWOwzuFN9F+vc8KZ2jrHRWm+SqpV6lw5Kv+lY0=
+            # value: mv4AbZJIbYWHoweSczvqT70GoB8uDKmIDx2NufF9EwY=
           valueFrom:
             secretKeyRef:
-              name: oauth2-secrets
+              name: oauth2-cookie-secret-new
               key: OAUTH2_PROXY_COOKIE_SECRET
         image: quay.io/oauth2-proxy/oauth2-proxy:latest
         imagePullPolicy: Always
