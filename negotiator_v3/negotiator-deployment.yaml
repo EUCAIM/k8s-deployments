@@ -16,6 +16,7 @@ spec:
     spec:
       containers:
       - name: negotiator-v3
+        #image: bbmrieric/negotiator:3.5
         #image: bbmrieric/negotiator:3.0.3
         image: bbmrieric/negotiator:3.4.0
         imagePullPolicy: Always
@@ -27,7 +28,10 @@ spec:
         - name: PROFILE
           value: "debug"
         - name: SPRING_DATASOURCE_URL
+          #value: "jdbc:postgresql://147.251.253.214:5432/negotiator"
+          # SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/negotiator
           value: "jdbc:postgresql://negotiator-v3-db-service:5432/negotiator"
+          #value: "jdbc:postgresql://postgres:5432/negotiator"
         - name: SPRING_DATASOURCE_USERNAME
           value: "negotiator"
         - name: SPRING_DATASOURCE_PASSWORD
@@ -42,6 +46,7 @@ spec:
           value: "negotiator" # Directly specify the password here
         - name: SPRING_FLYWAY_URL
           value: "jdbc:postgresql://negotiator-v3-db-service:5432/negotiator"
+          #value: "jdbc:postgresql://postgres:5432/negotiator"
         - name: NEGOTIATOR_FRONTENDURL
           value: "https://negotiator.eucaim.cancerimage.eu"
         - name: SERVER_FORWARD_HEADERS_STRATEGY
@@ -59,18 +64,24 @@ spec:
         - name: NEGOTIATOR_AUTHORIZATION_SUBJECTCLAIM
           value: "sub"
         - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_OPAQUETOKEN_CLIENT_ID
-          value: "introduce_your_token"
+          #value: "a15a95d1-b251-4f12-b608-76ec02c68010"
+          value: "8c902458-3640-4418-94b4-8f4b7f338957"
         - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_OPAQUETOKEN_CLIENT_SECRET
-          value: "introduce_your_token"
+          #value: "33a1c16e-fedb-494a-9bdb-fc79fbbb19e63156db50-89ce-46be-ba24-8c8b362f2344"
+          value: "fd0bf732-e828-41e6-8f73-5c2abed99708f0a1ef98-8edb-4ed5-8e08-10fe65c663fd"
         - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_OPAQUETOKEN_INTROSPECTION_URI
-          value: "https://login.bbmri-eric.eu/oidc/introspect"
+          #value: "https://login.aai.lifescience-ri.eu/oidc/introspect"
+          value: "https://login.bbmri-eric.eu/oidc/instrospect"
         - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_AUDIENCES
           value: "https://negotiator.eucaim.cancerimage.eu"
         - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI
-          value: "https://login.bbmri-eric.eu/oidc/"
+          #value: "https://login.aai.lifescience-ri.eu/oidc"
+          value: "https://login.bbmri-eric.eu/oidc"
         - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI
+          #value: "https://login.aai.lifescience-ri.eu/oidc/jwk"
           value: "https://login.bbmri-eric.eu/oidc/jwk"
         - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_USERINFOURI
+          #value: "https://login.aai.lifescience-ri.eu/oidc/userinfo"
           value: "https://login.bbmri-eric.eu/oidc/userinfo"
         - name:  NEGOTIATOR_MOLGENIS_URL
           value: "https://bbmritestnn.gcc.rug.nl"
