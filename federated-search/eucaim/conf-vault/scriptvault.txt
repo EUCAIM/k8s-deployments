@@ -1,0 +1,44 @@
+vault operator unseal
+wget https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 -O ~/jq
+chmod +x jq
+
+export VAULT_TOKEN=hvs.xx
+export VAULT_ADDR=http://vault:8200
+export BROKER_ID=x.x.x.x.x
+export data="{\"common_name\": \"$BROKER_ID\", \"ttl\": \"720h\"}"
+export PKI_DIR="$HOME/pki"
+ 
+mkdir -p $PKI_DIR
+cd $HOME
+ 
+VAULT_ADDR=$VAULT_ADDR VAULT_TOKEN=$VAULT_TOKEN vault secrets enable pki
+VAULT_ADDR=$VAULT_ADDR VAULT_TOKEN=$VAULT_TOKEN vault secrets tune -max-lease-ttl=87600h pki
+VAULT_ADDR=$VAULT_ADDR VAULT_TOKEN=$VAULT_TOKEN vault \
+       	write -field=certificate pki/root/generate/internal \
+      	common_name="Broker-Root" \
+      	issuer_name="EUCAIM-CA-Root" \
+      	ttl=87600h > "$PKI_DIR/EUCAIM_root_2022_ca.crt.pem" //ESTO SE AÑADE EN root-crt-pem
+VAULT_ADDR=$VAULT_ADDR VAULT_TOKEN=$VAULT_TOKEN vault write pki/roles/2022-servers_root allow_any_name=true
+cp ~/pki/EUCAIM_root_2022_ca.crt.pem ~/pki/root.crt.pem
+ 
+VAULT_ADDR=$VAULT_ADDR VAULT_TOKEN=$VAULT_TOKEN vault secrets enable -path=samply_pki pki
+VAULT_ADDR=$VAULT_ADDR VAULT_TOKEN=$VAULT_TOKEN vault secrets tune -max-lease-ttl=43800h samply_pki
+VAULT_ADDR=$VAULT_ADDR VAULT_TOKEN=$VAULT_TOKEN BROKER_ID=$BROKER_ID vault write -format=json samply_pki/intermediate/generate/internal \
+      	common_name="$BROKER_ID Intermediate Authority" \
+      	issuer_name="$BROKER_ID-intermediate" \
+      	| /tmp/jq -r '.data.csr' > "$PKI_DIR/pki_intermediate.csr.pem"
+VAULT_ADDR=$VAULT_ADDR VAULT_TOKEN=$VAULT_TOKEN vault write -format=json pki/root/sign-intermediate \
+      	issuer_ref="EUCAIM-CA-Root" \
+      	csr=@pki/pki_intermediate.csr.pem \
+      	format=pem_bundle ttl="43800h" \
+      	| /tmp/jq -r '.data.certificate' > "$PKI_DIR/intermediate.crt.pem"
+VAULT_ADDR=$VAULT_ADDR VAULT_TOKEN=$VAULT_TOKEN vault write samply_pki/intermediate/set-signed certificate=@pki/intermediate.crt.pem
+export ISSUER=$(VAULT_ADDR=$VAULT_ADDR VAULT_TOKEN=$VAULT_TOKEN vault read -field=default samply_pki/config/issuers)
+VAULT_ADDR=$VAULT_ADDR VAULT_TOKEN=$VAULT_TOKEN vault write "samply_pki/roles/samply-beam-default-role" \
+      	issuer_ref="${ISSUER}" \
+      	allowed_domains="$BROKER_ID" \
+      	allow_subdomains=true \
+      	allow_glob_domains=true \
+      	max_ttl="720h"
+ 
+VAULT_ADDR=$VAULT_ADDR VAULT_TOKEN=$VAULT_TOKEN  vault list pki/certs
