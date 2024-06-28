@@ -5,8 +5,6 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/backend-protocol: HTTP
-    # Fix for: "WARNING: Multiple cookies are required for this session as it exceeds the 4kb cookie limit. 
-    #           Please use server side session storage (eg. Redis) instead."
     nginx.ingress.kubernetes.io/proxy-buffer-size: "16k"
 spec:
   rules:
@@ -22,6 +20,7 @@ spec:
                 number: 4180
 
 ---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
