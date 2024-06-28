@@ -15,12 +15,10 @@ spec:
       containers:
       - name: negotiator-frontend
         image: bbmrieric/negotiator-frontend:1.4
-          #image: iblanque/negotiator-frontend:eucaim
         imagePullPolicy: Always
         env:
           - name: AUTH_URL
             value: "https://login.bbmri-eric.eu/oidc"
-            # value: "https://proxy.aai.lifescience-ri.eu"
           - name: CLIENT_ID
             value: "a15a95d1-b251-4f12-b608-76ec02c68010"
           - name: REDIRECT_URI
@@ -28,7 +26,6 @@ spec:
           - name: LOGOUT_URI
             value: "https://negotiator.eucaim.cancerimage.eu"
           - name: API_RESOURCES
-            #value: "https://negotiator-v3.bbmri-eric.eu"
             value: "https://negotiator.eucaim.cancerimage.eu"
           - name: ACTIVE_THEME
             value: "eucaim"
