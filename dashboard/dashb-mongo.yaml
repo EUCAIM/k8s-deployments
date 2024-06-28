@@ -25,10 +25,6 @@ spec:
           ports:
             - containerPort: 27017
               protocol: TCP
-                #          resources: 
-                #            requests: 
-                #              cpu: 2
-                #              memory: 4Gi
           volumeMounts:
             - name: dashb-mongo-vol
               mountPath: /data
