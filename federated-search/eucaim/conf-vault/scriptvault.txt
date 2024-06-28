@@ -17,7 +17,7 @@ VAULT_ADDR=$VAULT_ADDR VAULT_TOKEN=$VAULT_TOKEN vault \
        	write -field=certificate pki/root/generate/internal \
       	common_name="Broker-Root" \
       	issuer_name="EUCAIM-CA-Root" \
-      	ttl=87600h > "$PKI_DIR/EUCAIM_root_2022_ca.crt.pem" //ESTO SE AÑADE EN root-crt-pem
+      	ttl=87600h > "$PKI_DIR/EUCAIM_root_2022_ca.crt.pem" 
 VAULT_ADDR=$VAULT_ADDR VAULT_TOKEN=$VAULT_TOKEN vault write pki/roles/2022-servers_root allow_any_name=true
 cp ~/pki/EUCAIM_root_2022_ca.crt.pem ~/pki/root.crt.pem
  
