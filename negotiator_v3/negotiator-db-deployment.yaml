@@ -30,7 +30,6 @@ spec:
           value: "/bitnami/postgresql"
         volumeMounts:
         - name: data
-          #mountPath: /var/lib/postgresql/data
           mountPath: /bitnami/postgresql
           subPath: data
         resources:
