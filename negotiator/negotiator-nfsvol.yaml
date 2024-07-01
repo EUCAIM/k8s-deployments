@@ -12,5 +12,5 @@ spec:
   accessModes:
     - ReadWriteMany
   nfs:
-    server: 10.0.0.9
+    server: X.0.0.X
     path: /mnt/nfs_share/negotiator/db
