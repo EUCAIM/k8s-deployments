@@ -30,11 +30,11 @@ spec:
         - name: AUTH_HOST
           value: "https://login.bbmri-eric.eu"
         - name: AUTH_PUBLIC_KEY
-          value: "XX"
+          value: "XXKEYXX"
         - name: AUTH_CLIENT_ID
-          value: "xxxx"
+          value: "xxIDxx"
         - name: AUTH_CLIENT_SECRET
-          value: "xxxx"
+          value: "xxSECRETxx"
         resources:
           requests:
             cpu: "125m"
