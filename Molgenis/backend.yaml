@@ -4,14 +4,9 @@ metadata:
   name: backend
   namespace: eucaim
 data:
-#        proxy_set_header X-Forwarded-Port $server_port;
-#        proxy_set_header X-Forwarded-Host $server_name;
-#        proxy_pass http://molgenis.eucaim.svc.cluster.local:8080;
   backend.conf: |-
      location / {
         resolver kube-dns.kube-system.svc.cluster.local;
-        #proxy_pass https://eucaim.cancerimage.eu/molgenis/molgenis;
-        #proxy_pass http://molgenis.ramses.i3m.upv.es;
         proxy_pass http://molgenis:8080;
         client_max_body_size 500M;
         proxy_read_timeout 600s;
@@ -47,9 +42,7 @@ data:
         access_log  /var/log/nginx/access.log  main;
         client_max_body_size 500M;
         sendfile        on;
-        #tcp_nopush     on;
         keepalive_timeout  65;
-        #gzip  on;
         include /etc/nginx/conf.d/*.conf;
     }
 
@@ -289,48 +282,9 @@ metadata:
   namespace: eucaim
 data:
   lts.conf: |-
-     #
-     # LTS - Long time support
-     #
-     # These versions are exact and not dynamic
-     #
-     # This rewrites the incoming request uri to a specific version of the application
-     # So incoming is for example: /@molgenis-ui/security/dist/js/app.js
-     # This is changed to /@molgenis-ui/security@0.1.6/dist/js/app.js
-     #
-     #  rewrite ^/(.*)/app-manager/(.*)$            /$1/app-manager@~1.1/$2               break;
-     #  rewrite ^/(.*)/legacy-lib/(.*)$             /$1/legacy-lib@~1.1/$2                break;
-     #  rewrite ^/(.*)/core-ui/(.*)$                /$1/core-ui@~0.5/$2                   break;
-     #  rewrite ^/(.*)/metadata-manager/(.*)$       /$1/metadata-manager@~0.2/$2          break;
-     #  rewrite ^/(.*)/one-click-importer/(.*)$     /$1/one-click-importer@~0.1/$2        break;
-     #  rewrite ^/(.*)/questionnaires/(.*)$         /$1/questionnaires@~3.4/$2            break;
-     #  rewrite ^/(.*)/scripts/(.*)$                /$1/scripts@~3.4/$2                   break;
-     #  rewrite ^/(.*)/searchall/(.*)$              /$1/searchall@~0.1/$2                 break;
-     #  rewrite ^/(.*)/security/(.*)$               /$1/security@~0.5/$2                  break;
-     #  rewrite ^/(.*)/settings/(.*)$               /$1/settings@~4.4/$2                  break;
-     #  rewrite ^/(.*)/data-explorer/(.*)$          /$1/data-explorer@~3.13/$2           break;
-     #  rewrite ^/(.*)/molgenis-theme/(.*)$         /$1/molgenis-theme@latest/$2           break;
-     #  rewrite ^/(.*)/data-row-edit/(.*)$          /$1/data-row-edit@~5.6/$2             break;
-     #  rewrite ^/(.*)/data-row-permissions/(.*)$   /$1/data-row-permissions@~0.3/$2      break;
-     #  rewrite ^/(.*)/navigator/(.*)$              /$1/navigator@~0.3/$2                 break; # Deprecated
 
      location /@molgenis-ui/ {
 
-       #rewrite ^/(.*)/app-manager/(.*)$            /$1/molgenis-ui/app-manager/$2               break;
-       #rewrite ^/(.*)/core-ui/(.*)$                /$1/molgenis-ui/core-ui/$2                   break;
-       #rewrite ^/(.*)/legacy-lib/(.*)$             /$1/molgenis-ui/legacy-lib/$2                break;
-       #rewrite ^/(.*)/metadata-manager/(.*)$       /$1/molgenis-ui/metadata-manager/$2          break;
-       #rewrite ^/(.*)/one-click-importer/(.*)$     /$1/molgenis-ui/one-click-importer/$2        break;
-       #rewrite ^/(.*)/questionnaires/(.*)$         /$1/molgenis-ui/questionnaires/$2            break;
-       #rewrite ^/(.*)/scripts/(.*)$                /$1/molgenis-ui/scripts/$2                   break;
-       #rewrite ^/(.*)/searchall/(.*)$              /$1/molgenis-ui/searchall/$2                 break;
-       #rewrite ^/(.*)/security/(.*)$               /$1/molgenis-ui/security/$2                  break;
-       #rewrite ^/(.*)/settings/(.*)$               /$1/molgenis-ui/settings/$2                  break;
-       #rewrite ^/(.*)/data-explorer/(.*)$          /$1/molgenis-ui/data-explorer/$2            break;
-       #rewrite ^/(.*)/molgenis-theme/(.*)$         /$1/molgenis-ui/molgenis-theme/$2          break;
-       #rewrite ^/(.*)/data-row-edit/(.*)$          /$1/molgenis-ui/data-row-edit/$2             break;
-       #rewrite ^/(.*)/data-row-permissions/(.*)$   /$1/molgenis-ui/data-row-permissions/$2      break;
-       #rewrite ^/(.*)/navigator/(.*)$              /$1/molgenis-ui/navigator/$2                 break; # Deprecated
        rewrite ^/(.*)/app-manager/(.*)$            /html/molgenis-ui/app-manager/$2               break;
        rewrite ^/(.*)/core-ui/(.*)$                /html/molgenis-ui/core-ui/$2                   break;
        rewrite ^/(.*)/legacy-lib/(.*)$             /html/molgenis-ui/legacy-lib/$2                break;
@@ -348,7 +302,6 @@ data:
        rewrite ^/(.*)/navigator/(.*)$              /html/molgenis-ui/navigator/$2                 break; # Deprecated
 
        root /usr/share/nginx/;
-       #   proxy_pass https://unpkg.com/@molgenis-ui/;
        proxy_ssl_server_name on;
        proxy_intercept_errors on;
        recursive_error_pages on;
@@ -366,7 +319,3 @@ data:
        expires 10m;
      }
 
-
-     #rewrite ^/(.*)/molgenis-ui-form(/(.*))?$       https://eucaim.ramses.i3m.upv.es/molgenis-ui/molgenis-ui-form redirect;
-
-       #rewrite ^/(.*)/molgenis-ui-form(/(.*))?$       https://unpkg.com/@molgenis/molgenis-ui-form@~5.9$2   redirect;
