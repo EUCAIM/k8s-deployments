@@ -38,15 +38,6 @@ spec:
         persistentVolumeClaim:
           claimName: postgres-data-pvc
 
-          #     command: # modified
-          #      - /bin/bash
-          #      - -c
-          #      args:
-          #      - sleep 3600
-
-          #      command: [ "/usr/local/bin/docker-entrypoint.sh", "-c 'shared_buffers=256MB'", "-c 'max_locks_per_transaction=1024'" ]
-          # command: [ "/usr/local/bin/docker-entrypoint.sh" ]
-          #args: [ "-c 'shared_buffers=256MB' -c 'max_locks_per_transaction=1024'" ]
 ---
 # service
 kind: Service
@@ -169,11 +160,7 @@ spec:
 # Kibana dashboard
 #
 #
-#  securityContext:
-#     runAsUser: 0
-#      volumeMounts:
-#        - mountPath: /root/dashboard
-#          name: kbd-data
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -301,9 +288,7 @@ spec:
 #
 #  molgenis server
 #
-# Volume app-data (migrate to a NFS Volume)
-#
-# molgenis pod (migrate to a NFS Volume)
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -379,7 +364,7 @@ spec:
             - name: db_password
               value: "xxxxxxx"
             - name: admin.password
-              value: "axxxxxx"
+              value: "xxxxxxx"
             - name: MINIO_BUCKET_NAME
               value: "xxxxxxx"
             - name: MINIO_ENDPOINT
@@ -392,11 +377,6 @@ spec:
               value: "150"
             - name: audit.log.path
               value: "/home/molgenis/audit/audit.log"
-#        value: "jdbc:postgresql://postgres/molgenis"
-#      - name: CATALINA_OPTS
-#        value: "Xmx1g"
-#      - name: createDirs # supposedly for tomcat configuration, not working
-#        value: "false"
 ---
 
 # service
@@ -440,12 +420,6 @@ spec:
         image: molgenis/molgenis-frontend:10.1.0
         ports:
         - containerPort: 80
-        # command:
-        # - /bin/bash
-        # - -c
-        # args:
-        # - sleep 3600
-        # /usr/share/nginx/html
         volumeMounts:
         - mountPath: /usr/share/nginx/html
           name: frontend-data
@@ -504,7 +478,6 @@ spec:
 
 ---
 #cancerimage.eu
-#pgc-profe.info
 ########### INGRESS ######
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -513,17 +486,9 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/backend-protocol: HTTP
-    #nginx.ingress.kubernetes.io/configuration-snippet: |
-    #  rewrite /molgenis http://catalogue.ramses.i3m.upv.es/ permanent;
-    #  rewrite /catalog http://catalogue.ramses.i3m.upv.es/ permanent;
-    #nginx.ingress.kubernetes.io/rewrite-target: /$2
-    #nginx.ingress.kubernetes.io/use-regex: 'true'
     cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   tls:
-  #- hosts:
-  #  - catalogue.ramses.i3m.upv.es
-  #  secretName: catalogue.ramses.i3m.upv.es
   - hosts:
     - catalogue-eucaim.ramses.i3m.upv.es
     secretName: catalogue-eucaim.ramses.i3m.upv.es
