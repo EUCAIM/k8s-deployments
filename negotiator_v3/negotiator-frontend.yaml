@@ -20,7 +20,7 @@ spec:
           - name: AUTH_URL
             value: "https://login.bbmri-eric.eu/oidc"
           - name: CLIENT_ID
-            value: "a15a95d1-b251-4f12-b608-76ec02c68010"
+            value: "a15a95d1-b251-4f12-b608-XXXX"
           - name: REDIRECT_URI
             value: "https://negotiator.eucaim.cancerimage.eu/logged-in"
           - name: LOGOUT_URI
