@@ -6,7 +6,7 @@ spec:
   capacity:
     storage: 10Gi
   nfs:
-    server: 10.0.0.9
+    server: X.0.0.X
     path: /mnt/nfs_share/federated-search/vault/data
   accessModes:
     - ReadWriteMany
@@ -28,7 +28,7 @@ spec:
   capacity:
     storage: 1Gi
   nfs:
-    server: 10.0.0.9
+    server: X.0.0.X
     path: /mnt/nfs_share/federated-search/vault/audit
   accessModes:
     - ReadWriteMany
