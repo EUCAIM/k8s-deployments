@@ -28,17 +28,17 @@ spec:
         - name: SPRING_DATASOURCE_URL
           value: "jdbc:postgresql://negotiator-v3-db-service:5432/negotiator"
         - name: SPRING_DATASOURCE_USERNAME
-          value: "negotiator"
+          value: "changeusername"
         - name: SPRING_DATASOURCE_PASSWORD
-          value: "negotiator"
+          value: "changepassword"
         - name: SPRING_DATASOURCE_INITIALIZE
           value: "false"
         - name: SPRING_FLYWAY_ENABLED
           value: "true"
         - name: SPRING_FLYWAY_USER
-          value: "negotiator"
+          value: "youruser"
         - name: SPRING_FLYWAY_PASSWORD
-          value: "negotiator" # Directly specify the password here
+          value: "youtpassword" # Directly specify the password here
         - name: SPRING_FLYWAY_URL
           value: "jdbc:postgresql://negotiator-v3-db-service:5432/negotiator"
         - name: NEGOTIATOR_FRONTENDURL
