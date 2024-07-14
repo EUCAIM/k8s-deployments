@@ -64,15 +64,15 @@ spec:
         - name: NEGOTIATOR_AUTHORIZATION_SUBJECTCLAIM
           value: "sub"
         - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_OPAQUETOKEN_CLIENT_ID
-          #value: "a15a95d1-b251-4f12-b608-76ec02c68010"
-          value: "8c902458-3640-4418-94b4-8f4b7f338957"
+          #value: "a15a95d1-b251-4f12-...-..."
+          value: "8c902458-3640-4418-...-..."
         - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_OPAQUETOKEN_CLIENT_SECRET
-          #value: "33a1c16e-fedb-494a-9bdb-fc79fbbb19e63156db50-89ce-46be-ba24-8c8b362f2344"
-          value: "fd0bf732-e828-41e6-8f73-5c2abed99708f0a1ef98-8edb-4ed5-8e08-10fe65c663fd"
+          #value: "33a1c16e-fedb-494a-9bdb-fc79fbbb19e63156db50-89ce-46be-...-..."
+          value: "fd0bf732-e828-41e6-8f73-5c2abed99708f0a1ef98-8edb-4ed5-...-..."
         - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_OPAQUETOKEN_INTROSPECTION_URI
           value: "https://login.bbmri-eric.eu/oidc/introspect"
         - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_AUDIENCES
-          value: "a15a95d1-b251-4f12-b608-76ec02c68010"
+          value: "a15a95d1-b251-4f12-...-..."
         - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI
           #value: "https://login.aai.lifescience-ri.eu/oidc/"
           value: "https://login.bbmri-eric.eu/oidc/"
