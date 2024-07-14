@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: negotiator-v3
-        image: bbmrieric/negotiator:3.5.0
+        image: bbmrieric/negotiator:latest
         imagePullPolicy: Always
         securityContext:
           runAsUser: 1001
@@ -28,17 +28,23 @@ spec:
         - name: SPRING_DATASOURCE_URL
           value: "jdbc:postgresql://negotiator-v3-db-service:5432/negotiator"
         - name: SPRING_DATASOURCE_USERNAME
-          value: "changeusername"
+          value: "negotiator"
         - name: SPRING_DATASOURCE_PASSWORD
-          value: "changepassword"
+          valueFrom:
+            secretKeyRef:
+              name: negotiator-secrets
+              key: SPRING_DATASOURCE_PASSWORD
         - name: SPRING_DATASOURCE_INITIALIZE
           value: "false"
         - name: SPRING_FLYWAY_ENABLED
           value: "true"
         - name: SPRING_FLYWAY_USER
-          value: "youruser"
+          value: "negotiator"
         - name: SPRING_FLYWAY_PASSWORD
-          value: "youtpassword" # Directly specify the password here
+          valueFrom:
+            secretKeyRef:
+              name: negotiator-secrets
+              key: SPRING_FLYWAY_PASSWORD
         - name: SPRING_FLYWAY_URL
           value: "jdbc:postgresql://negotiator-v3-db-service:5432/negotiator"
         - name: NEGOTIATOR_FRONTENDURL
@@ -58,14 +64,17 @@ spec:
         - name: NEGOTIATOR_AUTHORIZATION_SUBJECTCLAIM
           value: "sub"
         - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_OPAQUETOKEN_CLIENT_ID
-          value: "8c902458-3640-4418-XXXXXX"
+          #value: "a15a95d1-b251-4f12-b608-76ec02c68010"
+          value: "8c902458-3640-4418-94b4-8f4b7f338957"
         - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_OPAQUETOKEN_CLIENT_SECRET
-          value: "fd0bf732-e828-41e6-8f73-5c2abed99708f0a1ef98-XXXXXXX"
+          #value: "33a1c16e-fedb-494a-9bdb-fc79fbbb19e63156db50-89ce-46be-ba24-8c8b362f2344"
+          value: "fd0bf732-e828-41e6-8f73-5c2abed99708f0a1ef98-8edb-4ed5-8e08-10fe65c663fd"
         - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_OPAQUETOKEN_INTROSPECTION_URI
           value: "https://login.bbmri-eric.eu/oidc/introspect"
         - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_AUDIENCES
-          value: "https://negotiator.eucaim.cancerimage.eu"
+          value: "a15a95d1-b251-4f12-b608-76ec02c68010"
         - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI
+          #value: "https://login.aai.lifescience-ri.eu/oidc/"
           value: "https://login.bbmri-eric.eu/oidc/"
         - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI
           value: "https://login.bbmri-eric.eu/oidc/jwk"
@@ -79,6 +88,18 @@ spec:
           value: "eucaim"
         - name: ACTIVE_LOGOS
           value: "eucaim"
+        - name: SPRING_MAIL_HOST
+          value: "smtp://smtp.gmail.com"
+        - name: SPRING_MAIL_PORT
+          value: "587"
+        - name: SPRING_MAIL_USERNAME
+          value: "eucaim.negotiator@gmail.com"
+        - name: SPRING_MAIL_PASSWORD
+          value: "EUC41MT0k3n"
+        - name: SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH
+          value: "true"
+        - name: SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE
+          value: "true"
         resources:
           requests:
             cpu: "0.5"
