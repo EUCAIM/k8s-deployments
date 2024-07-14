@@ -93,9 +93,9 @@ spec:
         - name: SPRING_MAIL_PORT
           value: "587"
         - name: SPRING_MAIL_USERNAME
-          value: "eucaim.negotiator@gmail.com"
+          value: ""
         - name: SPRING_MAIL_PASSWORD
-          value: "EUC41MT0k3n"
+          value: ""
         - name: SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH
           value: "true"
         - name: SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE
