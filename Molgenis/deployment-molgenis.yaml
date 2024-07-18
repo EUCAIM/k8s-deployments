@@ -1,66 +1,8 @@
-#
-#  postgres
-#
-# postgres pod (migrate to a NFS Volume)
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: postgres
-  labels:
-    app: postgres
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: postgres
-  template:
-    metadata:
-      labels:
-        app: postgres
-    spec:
-      containers:
-      - name: postgres-image
-        image: postgres:11-alpine
-        ports:
-        - containerPort: 5432
-        env:
-        - name: POSTGRES_USER
-          value: "xxusernamexx"
-        - name: POSTGRES_PASSWORD
-          value: "xxpasswordxx"
-        - name: POSTGRES_DB
-          value: "xxdbxx"
-        volumeMounts:
-        - mountPath: /var/lib/postgresql/data
-          name: db-data
-      volumes:
-      - name: db-data
-        persistentVolumeClaim:
-          claimName: postgres-data-pvc
-
----
-# service
-kind: Service
-apiVersion: v1
-metadata:
-  name: postgres
-spec:
-  selector:
-    app: postgres
-  ports:
-  - protocol: TCP
-    port: 5432
-    targetPort: 5432
----
-#
-#  elastic search
-#
-# elastic search pod (migrate to a NFS Volume)
-# memlocks limit not included.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: elasticsearch
+  namespace: catalogue
   labels:
     app: elasticsearch
 spec:
@@ -96,13 +38,12 @@ spec:
       - name: es-data
         persistentVolumeClaim:
           claimName: es-data-pvc
-
 ---
-# service
-kind: Service
 apiVersion: v1
+kind: Service
 metadata:
   name: es
+  namespace: catalogue
 spec:
   selector:
     app: elasticsearch
@@ -111,16 +52,16 @@ spec:
     port: 9200
     targetPort: 9200
 ---
+
+---
 #
 # Kibana
 #
-#  Not included:
-#  profiles:
-#      - audit
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: kibana
+  namespace: catalogue
   labels:
     app: kibana
 spec:
@@ -148,6 +89,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: kibana
+  namespace: catalogue
 spec:
   selector:
     app: kibana
@@ -158,13 +100,12 @@ spec:
 ---
 #
 # Kibana dashboard
-#
-#
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: kibana-dashboard
+  namespace: catalogue
   labels:
     app: kibana-dashboard
 spec:
@@ -197,6 +138,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: opencpu
+  namespace: catalogue
   labels:
     app: opencpu
 spec:
@@ -221,6 +163,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: opencpu
+  namespace: catalogue
 spec:
   selector:
     app: opencpu
@@ -236,6 +179,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: minio
+  namespace: catalogue
   labels:
     app: minio
 spec:
@@ -256,9 +200,12 @@ spec:
           name: minio-data
         env:
         - name: MINIO_ACCESS_KEY
-          value: "xxminiokeyxx"
+          value: "molgenis"
         - name: MINIO_SECRET_KEY
-          value: "xxminiosecretxx"
+          valueFrom:
+            secretKeyRef:
+              name: catalogue-secrets
+              key: MINIO_SECRET_KEY
         command:
         - /bin/bash
         - -c
@@ -275,6 +222,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: minio
+  namespace: catalogue
 spec:
   selector:
     app: minio
@@ -284,15 +232,64 @@ spec:
     targetPort: 9000
 ---
 
-########### MOLGENIS ######
-#
-#  molgenis server
-#
-
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  namespace: catalogue
+  labels:
+    app: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - name: postgres-image
+        image: postgres:11-alpine
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_USER
+          value: "molgenis"
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: catalogue-secrets
+              key: POSTGRES_PASSWORD
+        - name: POSTGRES_DB
+          value: "molgenis"
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: db-data
+      volumes:
+      - name: db-data
+        persistentVolumeClaim:
+          claimName: postgres-data-pvc
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: postgres
+  namespace: catalogue
+spec:
+  selector:
+    app: postgres
+  ports:
+  - protocol: TCP
+    port: 5432
+    targetPort: 5432
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: molgenis
+  namespace: catalogue
   labels:
     app: molgenis
 spec:
@@ -350,9 +347,9 @@ spec:
             - name: molgenis.home
               value: "/home/molgenis"
             - name: mail.username
-              value: "xx@xxxxmail.com"
+              value: ".@.com"
             - name: mail.password
-              value: "xxxxxxxxxx"
+              value: "email_pass"
             - name: opencpu.uri.host
               value: "opencpu"
             - name: elasticsearch.hosts
@@ -360,30 +357,35 @@ spec:
             - name: db_uri
               value: "jdbc:postgresql://postgres:5432/molgenis"
             - name: db_user
-              value: "xxxxxxx"
+              value: "molgenis"
             - name: db_password
-              value: "xxxxxxx"
+              valueFrom:
+                secretKeyRef:
+                  name: catalogue-secrets
+                  key: POSTGRES_PASSWORD
             - name: admin.password
-              value: "xxxxxxx"
+              value: "admin"
             - name: MINIO_BUCKET_NAME
-              value: "xxxxxxx"
+              value: "molgenis"
             - name: MINIO_ENDPOINT
               value: "http://minio:9000"
             - name: MINIO_ACCESS_KEY
-              value: "xxxxxxx"
+              value: "molgenis"
             - name: MINIO_SECRET_KEY
-              value: "xxxxxxx"
+              valueFrom:
+                secretKeyRef:
+                  name: catalogue-secrets
+                  key: MINIO_SECRET_KEY
             - name: MOLGENIS_MAX_FILE_MB
               value: "150"
             - name: audit.log.path
               value: "/home/molgenis/audit/audit.log"
 ---
-
-# service
 kind: Service
 apiVersion: v1
 metadata:
   name: molgenis
+  namespace: catalogue
 spec:
   selector:
     app: molgenis
@@ -394,15 +396,12 @@ spec:
     port: 8080
     name: molgenis-np
     targetPort: 8080
-
 ---
-#
-#  Front-end
-#
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
+  namespace: catalogue
   labels:
      app: frontend
 spec:
@@ -455,11 +454,11 @@ spec:
           - key: lts.conf
             path: lts.conf
 ---
-# service
 kind: Service
 apiVersion: v1
 metadata:
   name: frontend
+  namespace: catalogue
 spec:
   selector:
     app: frontend
@@ -475,9 +474,8 @@ spec:
     port: 8000
     name: frontend
     targetPort: 80
-
 ---
-#cancerimage.eu
+
 ########### INGRESS ######
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -486,15 +484,16 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/backend-protocol: HTTP
+
     cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   tls:
   - hosts:
-    - catalogue-eucaim.ramses.i3m.upv.es
-    secretName: catalogue-eucaim.ramses.i3m.upv.es
+    - catalogue.eucaim.cancerimage.eu
+    secretName: catalogue.eucaim.cancerimage.eu
 
   rules:
-    - host: catalogue-eucaim.ramses.i3m.upv.es
+    - host: catalogue.eucaim.cancerimage.eu
       http:
         paths:
           - path: /
