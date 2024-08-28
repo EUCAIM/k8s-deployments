@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moodle
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: moodle
+  template:
+    metadata:
+      labels:
+        app: moodle
+    spec:
+      containers:
+        - name: moodle
+          image: docker.io/bitnami/moodle:4.4
+          ports:
+            - name: http
+              containerPort: 8080
+            - name: https
+              containerPort: 443
+          env:
+            - name: MOODLE_DATABASE_HOST
+              value: "mariadb"
+            - name: MOODLE_DATABASE_PORT_NUMBER
+              value: "3306"
+            - name: MOODLE_DATABASE_NAME
+              value: "bitnami_moodle"
+            - name: MOODLE_DATABASE_USER
+              value: "bn_moodle"
+            - name: MOODLE_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: moodle-secret
+                  key: moodle-db-password
+            - name: MOODLE_USERNAME
+              value: "admin"
+            - name: MOODLE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: moodle-secret
+                  key: moodle-admin-password
+          volumeMounts:
+            - name: moodle-data
+              mountPath: /bitnami/moodle
+            - name: moodledata-data
+              mountPath: /bitnami/moodledata
+      volumes:
+        - name: moodle-data
+          persistentVolumeClaim:
+            claimName: moodle-pvc
+        - name: moodledata-data
+          persistentVolumeClaim:
+            claimName: moodledata-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: moodle
+spec:
+  selector:
+    app: moodle
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 443
+  type: ClusterIP
