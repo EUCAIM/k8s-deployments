@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mariadb
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      containers:
+        - name: mariadb
+          image: docker.io/bitnami/mariadb:11.4
+          env:
+            - name: MARIADB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-secret
+                  key: mariadb-root-password
+
+            - name: ALLOW_EMPTY_PASSWORD
+              value: "yes"
+            - name: MARIADB_DATABASE
+              value: "bitnami_moodle"
+            - name: MARIADB_USER
+              value: "bn_moodle"
+            - name: MARIADB_CHARACTER_SET
+              value: "utf8mb4"
+            - name: MARIADB_COLLATE
+              value: "utf8mb4_unicode_ci"
+            - name: MARIADB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-secret
+                  key: mariadb-password
+          volumeMounts:
+            - name: mariadb-data
+              mountPath: /bitnami/mariadb
+      volumes:
+        - name: mariadb-data
+          persistentVolumeClaim:
+            claimName: mariadb-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb
+spec:
+  selector:
+    app: mariadb
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+  type: ClusterIP
