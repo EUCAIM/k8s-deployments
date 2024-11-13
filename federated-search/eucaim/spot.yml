@@ -2,6 +2,7 @@ kind: Ingress
 apiVersion: networking.k8s.io/v1
 metadata:
   name: explorer-spot-ingress
+  namespace: federated-search
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     kubernetes.io/ingress.class: nginx
@@ -12,10 +13,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - explorer.eucaim.cancerimage.eu
-      secretName: explorer.eucaim.cancerimage.eu
+        - explorer-eucaim.grycap.i3m.upv.es
+      secretName: explorer-eucaim.grycap.i3m.upv.es
   rules:
-    - host: explorer.eucaim.cancerimage.eu
+    - host: explorer-eucaim.grycap.i3m.upv.es
       http:
         paths:
           - path: /backend/?(.*)
@@ -31,6 +32,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: spot-deployment
+  namespace: federated-search
   labels:
     app: spot
 spec:
@@ -40,12 +42,13 @@ spec:
       app: spot
   template:
     metadata:
+      namespace: federated-search
       labels:
         app: spot
     spec:
       containers:
       - name: spot
-        image: docker.verbis.dkfz.de/eucaim/spot:eucaim
+        image: docker.verbis.dkfz.de/cache/samply/rustyspot:main
         imagePullPolicy: Always
         resources:
           requests:
@@ -63,9 +66,9 @@ spec:
         - name: BEAM_URL
           value: http://beam-proxy-service:8081
         - name: BEAM_PROXY_ID
-          value: eucaim.broker.eucaim.cancerimage.eu
+          value: eucaim.broker.eucaim.cancerimage.eu // Changeme
         - name: BEAM_BROKER_ID
-          value: broker.eucaim.cancerimage.eu
+          value: broker.eucaim.cancerimage.eu // Changeme
         - name: BEAM_APP_ID
           value: focus
 
@@ -75,6 +78,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: spot-service
+  namespace: federated-search
   labels:
     app: spot
 spec:

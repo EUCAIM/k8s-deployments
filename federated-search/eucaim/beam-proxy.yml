@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: eucaim-broker-eucaim-cancerimage-eu-priv-pem
+  name: eucaim-broker-eucaim-cancerimage-eu-priv-pem //Changeme
 data:
-  eucaim.broker.eucaim.cancerimage.eu.priv.pem: your-proxy-private-pem-cert-enc-base64
+  eucaim.broker.eucaim.cancerimage.eu.priv.pem: your-proxy-private-pem-cert-enc-base64 // Changeme
 
 ---
 
@@ -11,6 +11,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: beam-proxy-deployment
+  namespace: federated-search
   labels:
     app: beam-proxy
 spec:
@@ -20,6 +21,7 @@ spec:
       app: beam-proxy
   template:
     metadata:
+      namespace: federated-search
       labels:
         app: beam-proxy
     spec:
@@ -41,11 +43,11 @@ spec:
               name: spot-beam-secret
               key: BEAM_SECRET
         - name: BROKER_URL
-          value: https://broker.eucaim.cancerimage.eu
+          value: https://broker.eucaim.cancerimage.eu // Changeme
         - name: PROXY_ID
-          value: eucaim.broker.eucaim.cancerimage.eu
+          value: eucaim.broker.eucaim.cancerimage.eu // Changeme
         - name: PRIVKEY_FILE
-          value: /run/secrets/eucaim.broker.eucaim.cancerimage.eu.priv.pem
+          value: /run/secrets/eucaim.broker.eucaim.cancerimage.eu.priv.pem // Changeme
         - name: BIND_ADDR
           value: 0.0.0.0:8081
         volumeMounts:
@@ -57,7 +59,7 @@ spec:
         projected:
           sources:
           - secret:
-              name: eucaim-broker-eucaim-cancerimage-eu-priv-pem
+              name: eucaim-broker-eucaim-cancerimage-eu-priv-pem // Changeme
           - secret:
               name: root-crt-pem
 
@@ -67,6 +69,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: beam-proxy-service
+  namespace: federated-search
   labels:
     app: beam-proxy
 spec:

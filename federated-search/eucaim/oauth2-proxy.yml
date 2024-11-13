@@ -10,7 +10,7 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-buffer-size: "16k"
 spec:
   rules:
-  - host: explorer.eucaim.cancerimage.eu
+  - host: explorer-eucaim.grycap.i3m.upv.es
     http:
       paths:
         - path: /oauth2/?(.*)
@@ -43,7 +43,7 @@ spec:
         - --provider=oidc
         - --provider-display-name="LifeScience AAI"
         - --prompt=none
-        - --redirect-url=https://explorer.eucaim.cancerimage.eu/oauth2/callback
+        - --redirect-url=https://explorer-eucaim.grycap.i3m.upv.es/oauth2/callback
         - --oidc-issuer-url=https://proxy.aai.lifescience-ri.eu
         - --scope="openid email profile eduperson_entitlement"
         - --code-challenge-method=S256
@@ -55,7 +55,7 @@ spec:
         - --upstream=static://202
         - --http-address=0.0.0.0:4180
         - --reverse-proxy=true
-        - --whitelist-domain=explorer.eucaim.cancerimage.eu 
+        - --whitelist-domain=explorer-eucaim.grycap.i3m.upv.es
         - --cookie-name=_eucaim_explorer_oauth2
         - --cookie-expire=12h
         - --cookie-secure=true
