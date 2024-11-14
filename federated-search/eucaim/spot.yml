@@ -70,7 +70,11 @@ spec:
         - name: BEAM_BROKER_ID
           value: broker.eucaim.cancerimage.eu // Changeme
         - name: BEAM_APP_ID
-          value: focus
+          value: focus.eucaim.broker.eucaim.cancerimage.eu // Changeme
+        - name: RUST_LOG
+          value: info
+        - name: CORS_ORIGIN
+          value: https://explorer-eucaim.grycap.i3m.upv.es
 
 ---
 
