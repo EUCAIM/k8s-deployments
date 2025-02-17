@@ -8,7 +8,8 @@ metadata:
     nginx.ingress.kubernetes.io/backend-protocol: HTTP
     nginx.ingress.kubernetes.io/rewrite-target: /$1
     nginx.ingress.kubernetes.io/auth-url: "https://$host/oauth2/auth"
-    nginx.ingress.kubernetes.io/auth-signin: "https://$host/oauth2/start?rd=$escaped_request_uri"
+    nginx.ingress.kubernetes.io/auth-signin: https://$host/oauth2/start
+    # nginx.ingress.kubernetes.io/auth-signin: "https://$host/oauth2/start?rd=$escaped_request_uri"
 spec:
   tls:
     - hosts:
@@ -24,7 +25,7 @@ spec:
               service:
                 name: spot-service
                 port:
-                  number: 8080
+                  number: 8055
 
 ---
 apiVersion: apps/v1
@@ -45,7 +46,7 @@ spec:
     spec:
       containers:
       - name: spot
-        image: docker.verbis.dkfz.de/eucaim/spot:eucaim
+        image: docker.verbis.dkfz.de/cache/samply/rustyspot:main
         imagePullPolicy: Always
         resources:
           requests:
@@ -60,15 +61,16 @@ spec:
             secretKeyRef:
               name: spot-beam-secret
               key: BEAM_SECRET
-        - name: BEAM_URL
+        - name: BEAM_PROXY_URL
           value: http://beam-proxy-service:8081
         - name: BEAM_PROXY_ID
           value: eucaim.broker.eucaim.cancerimage.eu
         - name: BEAM_BROKER_ID
           value: broker.eucaim.cancerimage.eu
         - name: BEAM_APP_ID
-          value: focus
-
+          value: focus.eucaim.broker.eucaim.cancerimage.eu
+        - name: CORS_ORIGIN
+          value: https://explorer.eucaim.cancerimage.eu
 ---
 
 apiVersion: v1
@@ -82,7 +84,7 @@ spec:
     app: spot
   ports:
     - protocol: TCP
-      port: 8080
-      targetPort: 8080
+      port: 8055
+      targetPort: 8055
       
 ---
