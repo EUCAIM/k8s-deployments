@@ -3,7 +3,7 @@
 # Change Log of the EUCAIM Platform Production Version
 
 This document describes the functionality of the EUCAIM Platform, accessible in [https://dashboard.eucaim.cancerimage.eu/](https://dashboard.eucaim.cancerimage.eu/). The current functtionality includes:
-- Dashboard with profile information, links to the catalogue and a basic helpdesk for anonymous users and all the applications. Once authenticated, the users can access the explorer and the negotiator.
+- Dashboard with profile information, links to the catalogue and a basic helpdesk for anonymous users, as the aggregated information of the catalogue (collection summary). Once authenticated, the users can access the explorer and the negotiator.
 - Catalogue, with 64 datasets with a total of 45573 subjects, well connected to the explorer and the negotiator.
 - Federated Search, with 27 searchable items and covering 60% of the datasets (4 providers), including AND/OR clauses.
 - Negotiator implements the whole access workflow and all datasets are registered in the database.
@@ -13,13 +13,19 @@ This document describes the functionality of the EUCAIM Platform, accessible in 
 
 ## MM2 Prototype (September 2023)
 These are the features available in the production version
+
 ## MM3 Pre-production prototype (June 2024)
-These are the features available in the production version
+These are the features available in the production version:
+- Dashboard with anonymous and authenticated access, links to the catalogue for anonymous users, as well as the aggregated information of the catalogue (collection summary). Once authenticated, the users can access the explorer and the negotiator.
+- Catalogue with 47 datasets.
+- Negotiator with all the registered datasets and request and review stages implemented.
 
 ## First Release (January 2024)
 ### January Release
+
 These are the features available in the production version
-- Catalogue 
+- Dashboard with profile information, links to the catalogue and a basic helpdesk for anonymous users. Once authenticated, the users can access the explorer and the negotiator.
+- Catalogue with 64 datasets with a total of 45573 subjects, well connected to the explorer and the negotiator.
 - Explorer (Federated Search):
   - Advanced functionality in Lens to allow "OR" clauses.
   - 27 items included as searching criteria.
