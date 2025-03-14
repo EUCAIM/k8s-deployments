@@ -3,7 +3,7 @@
 # Change Log of the EUCAIM Platform Development Version
 The development version is available at: [https://dashboard-eucaim.grycap.i3m.upv.es/](https://dashboard-eucaim.grycap.i3m.upv.es/)
 
-The current functtionality includes:
+The current functionality includes:
 - Dashboard with profile information, links to the catalogue and a basic helpdesk for anonymous users and all the applications. Once authenticated, the users can access the explorer and the negotiator and can see the datasets that they have access granted and those which are under negotiation.
 - Catalogue, with 64 datasets with a total of 45573 subjects, well connected to the explorer and the negotiator. An FDP for accessing the catalogue's metadata in RDF.
 - Federated Search is not operational in the development version.
@@ -11,6 +11,7 @@ The current functtionality includes:
 - Helpdesk, with anonymous and authenticated access for managing the user's support.
 - Federated processing: Not yet avaiable.
 - Reference nodes are not available in the development version.
+- Hyperontology deployed in the [https://hyperontology-eucaim.grycap.i3m.upv.es](https://hyperontology-eucaim.grycap.i3m.upv.es)
 
 ## MM2 Prototype (September 2023)
 These are the features available in the production version
@@ -31,3 +32,5 @@ These are the features added to the previous release
 - Dashboard: User's library connected to the negotiator. 
 - Catalogue 
   - FAIR Data Point exposed for all the connections at [https://catalogue-eucaim.grycap.i3m.upv.es/Eucaim/api/rdf](https://catalogue-eucaim.grycap.i3m.upv.es/Eucaim/api/rdf).
+- Hyperontology deployed in the [https://hyperontology-eucaim.grycap.i3m.upv.es](https://hyperontology-eucaim.grycap.i3m.upv.es)
+
