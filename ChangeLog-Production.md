@@ -2,14 +2,15 @@
 
 # Change Log of the EUCAIM Platform Production Version
 
-This document describes the functionality of the EUCAIM Platform, accessible in [https://dashboard.eucaim.cancerimage.eu/](https://dashboard.eucaim.cancerimage.eu/). The current functtionality includes:
-- Dashboard with profile information, links to the catalogue and a basic helpdesk for anonymous users, as the aggregated information of the catalogue (collection summary). Once authenticated, the users can access the explorer and the negotiator.
+This document describes the functionality of the EUCAIM Platform, accessible in [https://dashboard.eucaim.cancerimage.eu/](https://dashboard.eucaim.cancerimage.eu/). The current functionality includes:
+- Dashboard with profile information, links to the catalogue and a basic helpdesk for anonymous users, as the aggregated information of the catalogue (collection summary). Once authenticated, the users can access the explorer and the negotiator and the User's Library, listing the datasets for which a user has access granted, as well as those under negotiation.
 - Catalogue, with 64 datasets with a total of 45573 subjects, well connected to the explorer and the negotiator.
 - Federated Search, with 27 searchable items and covering 60% of the datasets (4 providers), including AND/OR clauses.
 - Negotiator implements the whole access workflow and all datasets are registered in the database.
 - Helpdesk, with anonymous and authenticated access for managing the user's support.
 - Federated processing: Not yet avaiable.
 - Reference Nodes: Two reference nodes with data ingestion capacity and processing capacity (UPV) through Secure Processing Environments with 15 GPUs, over 400 cores and 3 TB RAM.
+- Hyperontology deployed in the [https://hyperontology.eucaim.cancerimage.eu](https://hyperontology.eucaim.cancerimage.eu)
 
 ## MM2 Prototype (September 2023)
 These are the features available in the production version
@@ -40,6 +41,8 @@ These are the features available in the production version
 
 ### March Release
 These are the features added to the previous release
+- Dashboard
+  - User's Library, listing the datasets for which a user has access granted, as well as those under negotiation.
 - Catalogue 
   - New datasets from PRIMAGE and CHAIMELEON registered.
 - Explorer (Federated Search)
@@ -50,3 +53,5 @@ These are the features added to the previous release
     - Mount point bug solved.
     - Sample notebook corrected (additional comparisons in case of Null DICOM Tags added)
     - Batch execution operational and managing 15 GPUs, 400 cores and over 3 TB of RAM.
+- Hyperontology
+  - hyperontology available in [https://hyperontology.eucaim.cancerimage.eu](https://hyperontology.eucaim.cancerimage.eu)
