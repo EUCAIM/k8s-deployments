@@ -11,6 +11,7 @@ This document describes the functionality of the EUCAIM Platform, accessible in 
 - Federated processing: Not yet avaiable.
 - Reference Nodes: Two reference nodes with data ingestion capacity and processing capacity (UPV) through Secure Processing Environments with 15 GPUs, over 400 cores and 3 TB RAM.
 - Hyperontology deployed in the [https://hyperontology.eucaim.cancerimage.eu](https://hyperontology.eucaim.cancerimage.eu)
+- Registry of applications deployed in [https://harbor.eucaim.cancerimage.eu](https://harbor.eucaim.cancerimage.eu)
 
 ## MM2 Prototype (September 2023)
 These are the features available in the production version
@@ -55,3 +56,5 @@ These are the features added to the previous release
     - Batch execution operational and managing 15 GPUs, 400 cores and over 3 TB of RAM.
 - Hyperontology
   - hyperontology available in [https://hyperontology.eucaim.cancerimage.eu](https://hyperontology.eucaim.cancerimage.eu)
+- Registry
+  - A Harbor registry of artifacts is deployed in [https://harbor.eucaim.cancerimage.eu](https://harbor.eucaim.cancerimage.eu). The registry is available only to Data Holders to download the tools for the preparation of the data and software developers to push their applications.
