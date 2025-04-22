@@ -4,7 +4,7 @@
 
 This document describes the functionality of the EUCAIM Platform, accessible in [https://dashboard.eucaim.cancerimage.eu/](https://dashboard.eucaim.cancerimage.eu/). The current functionality includes:
 - Dashboard with profile information, links to the catalogue and a basic helpdesk for anonymous users, as the aggregated information of the catalogue (collection summary). Once authenticated, the users can access the explorer and the negotiator and the User's Library, listing the datasets for which a user has access granted, as well as those under negotiation.
-- Catalogue, with 64 datasets with a total of 45573 subjects, well connected to the explorer and the negotiator.
+- Catalogue, with 64 datasets with a total of 45573 subjects, well connected to the explorer and the negotiator. It uses Molgenis EMX2 version and an RDF FAIR Data Point in [https://catalogue-eucaim.grycap.i3m.upv.es/Eucaim/api/rdf/](https://catalogue-eucaim.grycap.i3m.upv.es/Eucaim/api/rdf/).
 - Federated Search, with 27 searchable items and covering 60% of the datasets (4 providers), including AND/OR clauses.
 - Negotiator implements the whole access workflow and all datasets are registered in the database.
 - Helpdesk, with anonymous and authenticated access for managing the user's support.
@@ -58,3 +58,10 @@ These are the features added to the previous release
   - hyperontology available in [https://hyperontology.eucaim.cancerimage.eu](https://hyperontology.eucaim.cancerimage.eu)
 - Registry
   - A Harbor registry of artifacts is deployed in [https://harbor.eucaim.cancerimage.eu](https://harbor.eucaim.cancerimage.eu). The registry is available only to Data Holders to download the tools for the preparation of the data and software developers to push their applications.
+
+### April Release
+These are the features added to the previous release
+- Dashboard
+  - A new version implemented in VUE has been deployed.
+- Catalogue
+  - A new version based on Molgenis EMX2 version and an RDF FAIR Data Point in [https://catalogue-eucaim.grycap.i3m.upv.es/Eucaim/api/rdf/](https://catalogue-eucaim.grycap.i3m.upv.es/Eucaim/api/rdf/).
