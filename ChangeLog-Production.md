@@ -65,3 +65,7 @@ These are the features added to the previous release
   - A new version implemented in VUE has been deployed.
 - Catalogue
   - A new version based on Molgenis EMX2 version and an RDF FAIR Data Point in [https://catalogue-eucaim.grycap.i3m.upv.es/Eucaim/api/rdf/](https://catalogue-eucaim.grycap.i3m.upv.es/Eucaim/api/rdf/).
+- Negotiator
+  -  A new version of the negotiator deployed, with advanced functionalities for the management of negotiations and the customisation of the interface for the admin user.
+-  Hyperontology
+  - Version 1.3 of the hyperontology deployed.
