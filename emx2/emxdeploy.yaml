@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: emx2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: emx2
+  template:
+    metadata:
+      labels:
+        app: emx2
+    spec:
+      containers:
+      - name: emx2
+        #        image: registry.gitlab.com/radiology/infrastructure/studies/eucaim/molgenis-emx2-eucaim/molgenis-emx2-eucaim:11.36.0-1.0.2dev
+        image: registry.gitlab.com/radiology/infrastructure/studies/eucaim/molgenis-emx2-eucaim/molgenis-emx2-eucaim:11.36.0-1.1.0
+        ports:
+        - containerPort: 8080
+        env:
+        - name: MOLGENIS_POSTGRES_URI
+          value: "jdbc:postgresql://postgres/molgenis"
+        - name: MOLGENIS_POSTGRES_USER
+          value: "XXXXXXX"
+        - name: MOLGENIS_POSTGRES_PASS
+          value: "XXXXXXX"
+        - name: NEGOTIATOR_URL
+          value: "https://your-negotiator-instance-url"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: emx2
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8080
+  selector:
+    app: emx2
+
