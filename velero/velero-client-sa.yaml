@@ -1,0 +1,58 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations:
+    kubernetes.io/enforce-mountable-secrets: "true"
+  name: velero-client-sa
+  namespace: velero
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: velero-client-role
+  namespace: velero
+rules:
+  - apiGroups:
+      - "*"
+    resources:
+      - "*"
+    verbs: 
+      - "*"
+  - apiGroups:
+      - ""
+    resources:
+      - "*"
+    verbs: 
+      - "*"
+  - apiGroups: ["velero.io"]
+    resources: ["*"]
+    verbs: ["get", "list", "watch"]
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: velero-client-role-binding
+  namespace: velero
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: velero-client-role
+subjects:
+  - namespace: velero 
+    kind: ServiceAccount
+    name: velero-client-sa
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: velero-client-sa-token-secret
+  namespace: velero
+  annotations:
+    kubernetes.io/service-account.name: velero-client-sa
+type: kubernetes.io/service-account-token

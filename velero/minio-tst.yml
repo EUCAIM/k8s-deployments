@@ -1,0 +1,71 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-storage
+provisioner: kubernetes.io/no-provisioner # Indicates manual provisioning
+volumeBindingMode: WaitForFirstConsumer # Important for local volumes
+reclaimPolicy: Retain # Retain the volume and data after PVC deletion
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: minio-pv
+spec:
+  capacity:
+    storage: 1Gi # Define the size. Make sure your host has this much space.
+  accessModes:
+    - ReadWriteMany # Can be mounted as read-write by a single node
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage # Matches the StorageClass defined above
+  hostPath:
+    path: "/tmp/minio-pv" # The path *inside the Minikube VM/container*
+    type: DirectoryOrCreate # Create the directory if it doesn't exist
+  nodeAffinity: # Crucial for local volumes to bind to a specific node
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - minikube # Or the actual hostname of your Minikube node
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: minio-pvc
+spec:
+  storageClassName: local-storage
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: minio
+  labels:
+    app: minio
+spec:
+  containers:
+  - name: minio
+    image: quay.io/minio/minio:RELEASE.2024-12-13T22-19-12Z
+    command: ["minio", "server", "/data", "--certs-dir", "/minio-certs"]
+    ports:
+    - containerPort: 9000
+    - containerPort: 9001
+    volumeMounts:
+      - name: test
+        mountPath: /data
+  volumes:
+    - name: test
+      persistentVolumeClaim:
+        claimName: minio-pvc
+      

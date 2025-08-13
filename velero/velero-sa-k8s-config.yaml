@@ -1,0 +1,18 @@
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: <your_k8s_cluster_authority_b64>
+    server: <k8s_endpoint>
+  name: velero-cluster
+contexts:
+- context:
+    cluster: velero-cluster
+    user: velero-client-sa
+  name: velero-client-context
+current-context: velero-client-context
+kind: Config
+preferences: {}
+users:
+- name: velero-client-sa
+  user:
+    token: <service_account_token>
