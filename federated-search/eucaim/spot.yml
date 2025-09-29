@@ -71,6 +71,8 @@ spec:
           value: focus.eucaim.broker.eucaim.cancerimage.eu
         - name: CORS_ORIGIN
           value: https://explorer.eucaim.cancerimage.eu
+        - name: PROJECT
+          value: eucaim
 ---
 
 apiVersion: v1
