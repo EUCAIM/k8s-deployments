@@ -1,0 +1,11 @@
+
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: app-orchestrator
+annotations:
+  description: The app's SA
+automountServiceAccountToken: false
+
+

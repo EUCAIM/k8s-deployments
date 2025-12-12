@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dashboard-vault
+spec:
+  ports:
+  - port: 8200
+    target: 8200
+    protocol: TCP
+    name: api
+  - port: 8201
+    target: 8201
+    protocol: TCP
+    name: cluster
+  selector:
+    app: dashboard-vault

@@ -1,0 +1,8 @@
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: app-dashboard
+annotations:
+  description: The app's user
+automountServiceAccountToken: false

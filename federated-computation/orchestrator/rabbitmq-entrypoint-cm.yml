@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: orchestrator-rabbitmq-entrypoint
+data:
+  rabbitmq_entrypoint.sh: |
+    #!/bin/bash
+    set -e
+
+    # Enable any plugins you need (only run once; it's idempotent)
+    rabbitmq-plugins enable --offline rabbitmq_auth_backend_http
+
+    # Now hand off to rabbitmq-server as PID 1
+    exec rabbitmq-server

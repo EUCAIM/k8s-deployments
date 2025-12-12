@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dashboard-sgecore-env
+data:
+  SHARED_DATA_UID: "1000"
+  SHARED_DATA_GID: "1000"
+  SUBMITTER_HOSTNAME: dashboard-frontend.fedcomp.svc.cluster.local

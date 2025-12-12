@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dashboard-sgecore
+spec:
+  ports:
+  - port: 6444
+    target: 6444
+    protocol: TCP
+    name: api
+  selector:
+    app: dashboard-sgecore

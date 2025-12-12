@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orchestrator
+spec:
+  replicas: 
+  selector:
+    matchLabels:
+      app: orchestrator
+  template:
+    metadata:
+      labels:
+        app: orchestrator
+    spec:
+      serviceAccountName: app-orchestrator
+      containers:
+      - name: orchestrator
+        image: harbor.eucaim.cancerimage.eu/fedcomp/orchestrator:251111-0820
+        ports:
+        - containerPort: 5000
+        env:
+        - name: LOG_LEVEL
+          value: "info"
+        volumeMounts:
+          - name: certs
+            mountPath: /certificates
+          - name: config-configmap
+            mountPath: /api/config.ini
+            subPath: config.ini
+          - name: data
+            mountPath: /api/data
+        resources:
+          requests:
+            cpu: 0.5
+            memory: "4Gi"
+          limits:
+            cpu: 1
+            memory: "4Gi"
+      volumes:
+        - name: certs
+          secret:
+            secretName: orchestrator-certificates
+        - name: config-configmap
+          configMap:
+            name: orchestrator-config
+        - name: data
+          persistentVolumeClaim:
+            claimName: orchestrator-data

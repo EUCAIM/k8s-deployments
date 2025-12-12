@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard-postgres
+spec:
+  replicas: 
+  selector:
+    matchLabels:
+      app: dashboard-postgres
+  template:
+    metadata:
+      labels:
+        app: dashboard-postgres
+    spec:
+      serviceAccountName: app-dashboard
+      containers:
+      - name: dashboard-postgres
+        ports:
+          - containerPort: 5432
+        image: postgres:17.3
+        envFrom:
+          - configMapRef:
+              name: dashboard-postgres-env
+          - secretRef:
+              name: dashboard-postgres-password
+        volumeMounts:
+          - name: data
+            mountPath: /var/lib/postgresql/data
+        resources:
+          requests:
+            cpu: 0.5
+            memory: "2Gi"
+          limits:
+            cpu: 1
+            memory: "2Gi"
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: dashboard-postgres-data
+

@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dashboard-vault-env
+data:
+  VAULT_ADDR: http://0.0.0.0:8200
+  KEYCLOAK_SERVER: dashboard-keycloak.fedcomp.svc.cluster.local:8080/auth

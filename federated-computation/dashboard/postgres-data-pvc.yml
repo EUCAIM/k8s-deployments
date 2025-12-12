@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dashboard-postgres-data
+spec:
+  storageClassName: managed-nfs-storage
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 20Gi

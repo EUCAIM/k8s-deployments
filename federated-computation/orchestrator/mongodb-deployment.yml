@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orchestrator-mongodb
+spec:
+  replicas: 
+  selector:
+    matchLabels:
+      app: orchestrator-mongodb
+  template:
+    metadata:
+      labels:
+        app: orchestrator-mongodb
+    spec:
+      serviceAccountName: app-orchestrator
+      containers:
+      - name: orchestrator-mongodb
+        image: mongo:latest
+        ports:
+        - containerPort: 27017
+        envFrom:
+          - secretRef:
+              name: orchestrator-mongodb-password
+        env:
+          - name: MONGO_INITDB_ROOT_USERNAME
+            valueFrom:
+              configMapKeyRef:
+                name: orchestrator-mongodb-env
+                key: MONGO_ROOT_USER
+          - name: MONGO_DB
+            valueFrom:
+              configMapKeyRef:
+                name: orchestrator-mongodb-env
+                key: MONGO_DB_NAME
+        volumeMounts:
+          - name: data
+            mountPath: /data/db
+        resources:
+          requests:
+            cpu: 0.5
+            memory: "4Gi"
+          limits:
+            cpu: 2
+            memory: "4Gi"
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: orchestrator-mongodb-data

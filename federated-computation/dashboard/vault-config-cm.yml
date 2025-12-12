@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dashboard-vault-config
+data:
+  jwt-user-policies-template.hcl: |
+    path "secret/data/{{identity.entity.aliases.JWT_ACCESSOR.name}}/*" {
+      capabilities = ["create", "read", "update", "delete", "list"]
+    }
+
+    path "auth/token/lookup-self" {
+      capabilities = ["read"]
+    }
+    path "auth/token/renew-self" {
+      capabilities = ["update"]
+    }
+    path "auth/token/revoke-self" {
+      capabilities = ["update"]
+    }  
+
+  init-config.hcl: |
+    api_addr     = "https://dashboard-vault.fedcomp.svc.cluster.local:8200"
+    cluster_addr = "https://dashboard-vault.fedcomp.svc.cluster.local:8201"
+    cluster_name            = "vault-cluster"
+    disable_mlock           = true
+    ui                      = true
+
+    listener "tcp" {
+    address       = "0.0.0.0:8200"
+    tls_cert_file = "/etc/ssl/certs/vault.crt"
+    tls_key_file  = "/etc/ssl/certs/vault.key"
+    }
+
+    storage "raft" {
+    path    = "/vault/data"
+    node_id = "vault-server-node"
+    }

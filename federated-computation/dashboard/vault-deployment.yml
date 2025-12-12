@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard-vault
+spec:
+  replicas: 
+  selector:
+    matchLabels:
+      app: dashboard-vault
+  template:
+    metadata:
+      labels:
+        app: dashboard-vault
+    spec:
+      serviceAccountName: app-dashboard
+      initContainers:
+      - name: dashboard-vault-copy-config
+        image: busybox
+        command: ["sh","-c"]
+        args:
+          - |
+            if [ ! -f /dst/.populated ]; then
+              cp -aL /src/. /dst/ && sync
+              chmod -R 0777 /dst
+              touch /dst/.populated
+            fi
+        volumeMounts:
+          - name: config-configmap
+            mountPath: /src
+          - name: data-config
+            mountPath: /dst
+            subPath: config   
+        resources:
+          requests:
+            cpu: 0.1
+            memory: "100Mi"
+          limits:
+            cpu: 0.1
+            memory: "200Mi"   
+      
+      containers:      
+      - name: dashboard-vault
+        securityContext:
+          capabilities:
+            add: ["IPC_LOCK"]
+        image: hashicorp/vault:1.20
+        # command: ["tail", "-f", "/dev/null"]
+        args: 
+          - server
+        ports:
+          - containerPort: 8200
+        env:
+          - name: KEYCLOAK_REALM
+            valueFrom:
+              configMapKeyRef:
+                name: dashboard-keycloak-env
+                key: KEYCLOAK_REALM
+        envFrom:
+          - configMapRef:
+              name: dashboard-vault-env
+        volumeMounts:
+          - name: data-config
+            mountPath: /vault/data
+            subPath: data
+          - name: data-config
+            mountPath: /vault/config
+            subPath: config
+          - name: certs
+            mountPath: /etc/ssl/certs/
+          # - name: init-configmap
+          #   mountPath: /vault-init.sh
+          #   subPath: vault-init.sh
+        resources:
+          requests:
+            cpu: 0.5
+            memory: "2Gi"
+          limits:
+            cpu: 1
+            memory: "2Gi"
+      volumes:
+        - name: data-config
+          persistentVolumeClaim:
+            claimName: dashboard-vault-data-config
+        - name: certs
+          secret:
+            secretName: dashboard-vault-certificates
+        # - name: init-configmap
+        #   configMap:
+        #     name: dashboard-vault-init
+        #     defaultMode: 0720
+        - name: config-configmap
+          configMap:
+            name: dashboard-vault-config

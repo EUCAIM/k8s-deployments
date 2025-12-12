@@ -1,0 +1,20 @@
+
+apiVersion: v1
+kind: Namespace
+annotations:
+  description: Where all the resources related to the federated computation are deployed
+metadata:
+  name: fedcomp
+  labels:
+    purpose: development
+
+---
+
+apiVersion: v1
+kind: Namespace
+annotations:
+  description: Where all the service accounts and their token secrets for the k8s Dashboard are deployed. These accounts manage the resources deployed in the fedcomp namespace.
+metadata:
+  name: fedcomp-users
+  labels:
+    purpose: development

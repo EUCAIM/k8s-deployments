@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dashboard-keycloak-env
+data:
+  DB_VENDOR: POSTGRES
+  DB_ADDR: dashboard-postgres.fedcomp.svc.cluster.local:5432
+  DB_SCHEMA: public
+  KEYCLOAK_USER: admin
+  PROXY_ADDRESS_FORWARDING: "false"
+  KEYCLOAK_FRONTEND_URL: "https://fedcomp.eucaim.cancerimage.eu/auth"
+  KEYCLOAK_REALM: project

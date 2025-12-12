@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard-sgecore
+spec:
+  replicas: 
+  selector:
+    matchLabels:
+      app: dashboard-sgecore
+  template:
+    metadata:
+      labels:
+        app: dashboard-sgecore
+    spec:
+      serviceAccountName: app-dashboard
+      initContainers:
+        - name: dashboard-init-create-shared-folders
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              mkdir -p /shared_data/public /shared_data/userdata
+              chmod -R 0777 /shared_data/public /shared_data/userdata || true
+          volumeMounts:
+            - name: frontend-sgecore-shareddata
+              mountPath: /shared_data
+          securityContext:
+            runAsUser: 0
+      containers:
+      - name: dashboard-sgecore
+        ports:
+          - containerPort: 6444
+        image: harbor.eucaim.cancerimage.eu/fedcomp/sgecore:1.2.0
+        command:
+          - /bin/bash
+          - -c
+          - |
+            groupmod -g $DOCKER_GROUP docker \
+            && usermod -aG docker application  \
+            && echo \"$SUBMITTER_HOSTNAME\" > /home/application/submit_hosts.list \
+            && /entrypoint.sh
+        env:
+          - name: DOCKER_GROUP
+            value: "1002"
+        envFrom:
+          - configMapRef:
+              name: dashboard-sgecore-env
+          # - secretRef:
+          #     name: dashboard-sgecore-password
+        volumeMounts:
+          - name: frontend-sgecore-shareddata
+            mountPath: /shared_data
+        resources:
+          requests:
+            cpu: 0.5
+            memory: "2Gi"
+          limits:
+            cpu: 4
+            memory: "2Gi"
+      volumes:
+        - name: frontend-sgecore-shareddata
+          persistentVolumeClaim:
+            claimName: dashboard-frontend-sgecore-shareddata
+

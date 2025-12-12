@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: orchestrator-rabbitmq-env
+data:
+  RABBITMQ_VHOST: rabbit_server
+  RABBITMQ_USER: rabbitmq_user

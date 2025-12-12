@@ -1,0 +1,33 @@
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: dashboard-frontend
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    nginx.ingress.kubernetes.io/enable-cors: 'true'
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  tls:
+    - hosts:
+        - fedcomp.eucaim.cancerimage.eu
+      secretName: fedcomp.eucaim.cancerimage.eu
+  rules:
+    - host: fedcomp.eucaim.cancerimage.eu
+      http:
+        paths:
+          - path: /dashboard/
+            pathType: Prefix
+            backend:
+              service:
+                name: dashboard-frontend
+                port:
+                  number: 80
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: dashboard-frontend
+                port:
+                  number: 80

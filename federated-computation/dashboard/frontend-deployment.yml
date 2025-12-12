@@ -1,0 +1,146 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard-frontend
+spec:
+  replicas: 
+  selector:
+    matchLabels:
+      app: dashboard-frontend
+  template:
+    metadata:
+      labels:
+        app: dashboard-frontend
+    spec:
+      serviceAccountName: app-dashboard
+      initContainers:
+        - name: dashboard-init-create-shared-folders
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              mkdir -p /shared_data/public /shared_data/userdata
+              chmod -R 0777 /shared_data/public /shared_data/userdata || true
+          volumeMounts:
+            - name: frontend-sgecore-shareddata
+              mountPath: /shared_data
+          securityContext:
+            runAsUser: 0
+      containers:
+      - name: dashboard-frontend
+        image: harbor.eucaim.cancerimage.eu/fedcomp/dashboard-frontend:1.2.0
+        volumeMounts:
+          - name: frontend-sgecore-shareddata
+            mountPath: /shared_data
+          # - name: conf
+          #   mountPath: /var/www/html/openVRE/config/bootstrap.php
+          #   subPath: bootstrap.php
+          - name: conf
+            mountPath: /var/www/html/openVRE/config/globals.inc.php
+            subPath: globals.inc.php
+          - name: conf
+            mountPath: /var/lib/gridengine/default/common/act_qmaster
+            subPath: act_qmaster
+          - name: apache-conf
+            mountPath: /opt/docker/etc/httpd/conf.d/10-server.conf
+            subPath: server.conf
+          # - name: data
+          #   mountPath: /var/www/html/openVRE/data
+          #   subPath: data
+          # - name: certs
+          #   mountPath: /etc/ssl/certs/
+          - name: certs-vault-ca
+            mountPath: /etc/ssl/certs/
+        command:
+          - bash 
+          - -c 
+          - "export MONGO_CREDENTIALS=\"${MONGO_INITDB_USERNAME}:${MONGO_INITDB_PASSWORD}\" && /opt/docker/bin/entrypoint.sh supervisord"
+        envFrom:
+          - configMapRef:
+              name: dashboard-frontend-env
+        env:
+          - name: KEYCLOAK_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: dashboard-frontend-passwords-secrets
+                key: KEYCLOAK_SECRET
+          - name: MAIL_PASS
+            valueFrom:
+              secretKeyRef:
+                name: dashboard-frontend-passwords-secrets
+                key: MAIL_PASS
+          - name: KEYCLOAK_REALM
+            valueFrom:
+              configMapKeyRef:
+                name: dashboard-keycloak-env
+                key: KEYCLOAK_REALM
+          - name: MONGO_TLS_MODE
+            valueFrom:
+              configMapKeyRef:
+                name: dashboard-mongodb-env
+                key: MONGO_TLS_MODE
+          - name: MONGO_MAIN_DB
+            valueFrom:
+              configMapKeyRef:
+                name: dashboard-mongodb-env
+                key: MONGO_MAIN_DB
+          - name: MONGO_INITDB_USERNAME
+            valueFrom:
+              configMapKeyRef:
+                name: dashboard-mongodb-env
+                key: MONGO_INITDB_USERNAME
+          - name: MONGO_INITDB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: dashboard-mongodb-password
+                key: MONGO_INITDB_PASSWORD
+
+          - name: VAULT_CERT_CAFILE
+            value: /etc/ssl/certs/vault_ca.pem
+          - name: FRONTEND_CERT_PEM
+            value: /etc/ssl/certs/frontend.pem
+          - name: FRONTEND_CERT_KEY
+            value: /etc/ssl/certs/frontend.key
+          - name: MONGO_CREDENTIALS
+            value: ${MONGO_INITDB_USERNAME}:${MONGO_INITDB_PASSWORD}               
+        resources:
+          requests:
+            cpu: 0.5
+            memory: "4Gi"
+          limits:
+            cpu: 2
+            memory: "4Gi"
+      volumes:
+        - name: frontend-sgecore-shareddata
+          persistentVolumeClaim:
+            claimName: dashboard-frontend-sgecore-shareddata
+        - name: apache-conf
+          configMap:
+            name: dashboard-frontend-apache-conf
+            items:
+            - key: server.conf
+              path: server.conf
+        - name: conf
+          configMap:
+            name: dashboard-frontend-config
+            items:
+              # - key: bootstrap.php
+              #   path: bootstrap.php
+              - key: globals.inc.php
+                path: globals.inc.php
+              - key: act_qmaster
+                path: act_qmaster
+            
+        # - name: data
+        #   persistentVolumeClaim:
+        #     claimName: dashboard-frontend-data
+        - name: certs-vault-ca
+          secret:
+            secretName: dashboard-vault-certificates
+            items:
+            - key: vault-ca.key
+              path: vault-ca.key
+        # - name: certs
+        #   secret:
+        #     secretName: dashboard-frontend-certificates

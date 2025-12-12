@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orchestrator-rabbitmq
+spec:
+  replicas: 
+  selector:
+    matchLabels:
+      app: orchestrator-rabbitmq
+  template:
+    metadata:
+      labels:
+        app: orchestrator-rabbitmq
+    spec:
+      serviceAccountName: app-orchestrator
+      containers:
+      - name: orchestrator-rabbitmq
+        image: rabbitmq:3-management
+        command:
+          # - tail
+          # - -f
+          # - /dev/null
+          - /bin/bash
+          - /usr/local/bin/start-rabbit.sh
+        ports:
+        - containerPort: 5671
+        - containerPort: 15672
+        envFrom:
+          - secretRef:
+              name: orchestrator-rabbitmq-password
+        env:
+          - name: RABBITMQ_DEFAULT_VHOST
+            valueFrom:
+              configMapKeyRef:
+                name: orchestrator-rabbitmq-env
+                key: RABBITMQ_VHOST
+          - name: RABBITMQ_DEFAULT_USER
+            valueFrom:
+              configMapKeyRef:
+                name: orchestrator-rabbitmq-env
+                key: RABBITMQ_USER
+        volumeMounts:
+          - name: certs
+            mountPath: /etc/rabbitmq/certs
+          - name: config
+            mountPath: /etc/rabbitmq/rabbitmq.conf
+            subPath: rabbitmq.conf
+          - name: entrypoint
+            mountPath: /usr/local/bin/start-rabbit.sh
+            subPath: rabbitmq_entrypoint.sh
+          - name: data-log
+            mountPath: /var/lib/rabbitmq
+            subPath: data
+          - name: data-log
+            mountPath: /var/log/rabbitmq
+            subPath: log
+        resources:
+          requests:
+            cpu: 0.5
+            memory: "4Gi"
+          limits:
+            cpu: 2
+            memory: "4Gi"
+      volumes:
+        - name: certs
+          secret:
+            secretName: orchestrator-rabbitmq-certificates
+        - name: config
+          configMap:
+            name: orchestrator-rabbitmq-config
+        - name: entrypoint
+          configMap:
+            name: orchestrator-rabbitmq-entrypoint
+            defaultMode: 0720
+        - name: data-log
+          persistentVolumeClaim:
+            claimName: orchestrator-rabbitmq-data-log

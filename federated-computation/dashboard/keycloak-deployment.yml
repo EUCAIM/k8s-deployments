@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard-keycloak
+spec:
+  replicas: 
+  selector:
+    matchLabels:
+      app: dashboard-keycloak
+  template:
+    metadata:
+      labels:
+        app: dashboard-keycloak
+    spec:
+      serviceAccountName: app-dashboard
+      containers:
+      - name: dashboard-keycloak
+        image: quay.io/keycloak/keycloak:15.0.2
+        args: 
+          - -b 0.0.0.0 
+          # - -Dkeycloak.profile.feature.upload_scripts=enabled 
+          # - -Dkeycloak.migration.action=import
+          # - -Dkeycloak.migration.provider=singleFile
+          # - -Dkeycloak.migration.file=/opt/jboss/keycloak/imports/realm-export.json
+          # - -Dkeycloak.migration.strategy=IGNORE_EXISTING
+        envFrom:
+          - secretRef:
+              name: dashboard-keycloak-password
+          - configMapRef:
+              name: dashboard-keycloak-env
+        env:
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: dashboard-postgres-password
+                key: POSTGRES_PASSWORD
+          - name: DB_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                name: dashboard-postgres-env
+                key: POSTGRES_DB
+          - name: DB_USER
+            valueFrom:
+              configMapKeyRef:
+                name: dashboard-postgres-env
+                key: POSTGRES_USER                
+        resources:
+          requests:
+            cpu: 0.5
+            memory: "4Gi"
+          limits:
+            cpu: 2
+            memory: "4Gi"

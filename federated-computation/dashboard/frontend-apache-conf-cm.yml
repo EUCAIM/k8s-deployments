@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dashboard-frontend-apache-conf
+data:
+  server.conf: |
+    <VirtualHost *:80>
+        ServerName fedcomp.eucaim.cancerimage.eu
+        DocumentRoot /var/www/html/openVRE/public/
+        DirectoryIndex index.php
+
+        <Directory "/var/www/html/openVRE/public/api">
+            AllowOverride All
+            Require all granted
+        </Directory>
+
+        ProxyPass "/auth" "http://dashboard-keycloak.fedcomp.svc.cluster.local:8080"
+        ProxyPassReverse "/auth" "http://dashboard-keycloak.fedcomp.svc.cluster.local::8080"
+
+        RewriteEngine on
+        RewriteRule ^/interactive-tool/([^/]+)/?(.*) https://$1:8090/$2 [P,L]
+
+        ErrorLog /var/log/apache/vre-error.log
+        CustomLog /var/log/apache/vre.log combined
+    </VirtualHost>

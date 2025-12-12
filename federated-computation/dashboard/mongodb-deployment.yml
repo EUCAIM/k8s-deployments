@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard-mongodb
+spec:
+  replicas: 
+  selector:
+    matchLabels:
+      app: dashboard-mongodb
+  template:
+    metadata:
+      labels:
+        app: dashboard-mongodb
+    spec:
+      serviceAccountName: app-dashboard
+      containers:
+      - name: dashboard-mongodb
+        image: mongo:8.0
+        args:
+          - mongod
+          - --bind_ip_all
+          - --tlsMode=disabled
+        # command: 
+        #   - /bin/bash
+        #   - -c
+        #   - "mongod --bind_ip_all --tlsMode ${MONGO_TLS_MODE}"
+        ports:
+        - containerPort: 27017
+        envFrom:
+          - secretRef:
+              name: dashboard-mongodb-password
+          - configMapRef:
+              name: dashboard-mongodb-env
+        env:
+          - name: MONGO_PORT
+            value: "27017"
+        volumeMounts:
+          - name: conf-configmap
+            mountPath: /etc/mongo/mongod.conf
+            subPath: mongod.conf
+          - name: init-sh-configmap
+            mountPath: /docker-entrypoint-initdb.d/
+          - name: init-documents-configmap
+            mountPath: /init_documents
+          - name: data
+            mountPath: /data/db
+        resources:
+          requests:
+            cpu: 0.5
+            memory: "4Gi"
+          limits:
+            cpu: 2
+            memory: "4Gi"
+      volumes:
+        - name: conf-configmap
+          configMap:
+            name: dashboard-mongodb-conf
+            items:
+            - key: mongod.conf
+              path: mongod.conf
+        - name: init-sh-configmap
+          configMap:
+            name: dashboard-mongodb-init-sh
+            defaultMode: 0755
+        - name: init-documents-configmap
+          configMap:
+            name: dashboard-mongodb-init-documents
+        - name: data
+          persistentVolumeClaim:
+            claimName: dashboard-mongodb-data
