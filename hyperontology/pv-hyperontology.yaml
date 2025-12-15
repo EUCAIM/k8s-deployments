@@ -1,0 +1,17 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: pv-ontology
+  labels:
+    type: local
+spec:
+  storageClassName: "ontologypv"
+  persistentVolumeReclaimPolicy: Retain
+  capacity:
+    storage: 500Mi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: kubeserver.localdomain
+    path: /yourmounteddir
+    readOnly: false
