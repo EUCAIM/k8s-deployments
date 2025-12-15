@@ -40,7 +40,3 @@ The Hyperontology service is a static web server hosting ontology files for the 
    ```
 
 
-## Managing Content
-
-Ontology files are stored in the NFS volume at the volume mounted on the NFS server.
-
