@@ -1,0 +1,23 @@
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: ontology-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - hyperontology.eucaim.cancerimage.eu
+      secretName: hyperontology.eucaim.cancerimage.eu
+  rules:
+    - host: hyperontology.eucaim.cancerimage.eu
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: web-ontology
+                port:
+                  number: 80
