@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: web-ontology
+  name: web-ontology
+  namespace: ontology
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web-ontology
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: web-ontology
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        resources: {}
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: "/usr/share/nginx/html"
+          name: htaccess
+      volumes:
+        - name: htaccess
+          persistentVolumeClaim:
+            claimName: pvc-ontology
+status: {}
