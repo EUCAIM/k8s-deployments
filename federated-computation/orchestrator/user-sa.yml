@@ -20,7 +20,7 @@ rules:
   - apiGroups:
         - ""
         - apps
-    resources: ["secrets", "pods", "events", "pods/log", "pods/status", "pods/exec", "configmaps", "deployments", "deployments/scale", "deployments/status", "services", "services/status", "replicasets"]
+    resources: ["persistentvolumeclaims", "secrets", "pods", "events", "pods/log", "pods/status", "pods/exec", "configmaps", "deployments", "deployments/scale", "deployments/status", "services", "services/status", "replicasets"]
     verbs: ["create", "get", "list", "watch",  "delete", "update", "patch"]
 
 ---
