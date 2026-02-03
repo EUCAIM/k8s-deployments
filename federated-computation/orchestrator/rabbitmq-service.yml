@@ -3,14 +3,12 @@ kind: Service
 metadata:
   name: orchestrator-rabbitmq
 spec:
+  type: NodePort
   ports:
   - port: 5671
-    target: 5671
+    targetPort: 5671
     protocol: TCP
     name: api
-  - port: 15672
-    target: 15672
-    protocol: TCP
-    name: management
+    nodePort: 5671
   selector:
     app: orchestrator-rabbitmq
