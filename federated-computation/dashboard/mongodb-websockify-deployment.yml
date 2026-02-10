@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard-mongodb-websockify
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dashboard-mongodb-websockify
+  template:
+    metadata:
+      labels:
+        app: dashboard-mongodb-websockify
+    spec:
+      containers:
+      - name: websockify
+        image: harbor.eucaim.cancerimage.eu/library/novnc/websockify:0.13.0
+        args:
+          - "80"
+          - "dashboard-mongodb.fedcomp:27017"
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: 0.5
+            memory: "2Gi"
+          limits:
+            cpu: 0.5
+            memory: "2Gi"
+

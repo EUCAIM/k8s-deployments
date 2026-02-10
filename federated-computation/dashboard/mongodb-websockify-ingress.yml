@@ -1,0 +1,27 @@
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: dashboard-mongodb-websockify
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  tls:
+    - hosts:
+        - mongodb-admin.dashboard.fedcomp.eucaim.cancerimage.eu
+      secretName: mongodb-admin.dashboard.fedcomp.eucaim.cancerimage.eu
+  rules:
+    - host: mongodb-admin.dashboard.fedcomp.eucaim.cancerimage.eu
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: dashboard-mongodb-websockify
+                port:
+                  number: 80

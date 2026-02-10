@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orchestrator-mongodb-websockify
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: orchestrator-mongodb-websockify
+  template:
+    metadata:
+      labels:
+        app: orchestrator-mongodb-websockify
+    spec:
+      containers:
+      - name: websockify
+        image: harbor.eucaim.cancerimage.eu/library/novnc/websockify:0.13.0
+        args:
+          - "80"
+          - "orchestrator-mongodb.fedcomp:27017"
+        ports:
+        - containerPort: 80
+      resources:
+        requests:
+          cpu: 0.5
+          memory: "2Gi"
+        limits:
+          cpu: 0.5
+          memory: "2Gi"
+
