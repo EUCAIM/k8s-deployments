@@ -13,6 +13,13 @@ spec:
         app: orchestrator-rabbitmq
     spec:
       serviceAccountName: app-orchestrator
+      initContainers:
+        - name: init-mkdir
+          image: busybox
+          command: ["sh", "-c", "mkdir -p /mnt/data /mnt/log"]
+          volumeMounts:
+            - name: data-log
+              mountPath: /mnt
       containers:
       - name: orchestrator-rabbitmq
         image: rabbitmq:3-management

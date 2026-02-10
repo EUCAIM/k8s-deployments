@@ -4,6 +4,8 @@ metadata:
   name: orchestrator-rabbitmq-config
 data:
   rabbitmq.conf: |
+    # Enable subpath
+    management.path_prefix = /orchestrator-rabbitmq-admin
     # Disabte non SSL connection
     listeners.tcp = none
 
