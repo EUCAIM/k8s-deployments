@@ -73,6 +73,8 @@ spec:
           value: https://explorer.eucaim.cancerimage.eu
         - name: PROJECT
           value: eucaim
+        - name: SITES
+          value: procanceri,chaimeleon,incisive,upv-node,auth,huvr
 ---
 
 apiVersion: v1
