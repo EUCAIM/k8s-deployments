@@ -74,7 +74,7 @@ spec:
         - name: PROJECT
           value: eucaim
         - name: SITES
-          value: procanceri,chaimeleon,incisive,upv-node,auth,huvr
+          value: procanceri,chaimeleon,incisive,upv-node,auth,huvr,eucanimage
 ---
 
 apiVersion: v1
