@@ -16,12 +16,9 @@ spec:
     spec:
       containers:
         - name: mongo-dashboard
-          image: eucaim.cancerimage.eu:10443/library/mongodb
+          image: harbor.eucaim.cancerimage.eu/library/dashboard/mongo:7.0.28
           command:
-            - /usr/bin/mongod
-          args:
-            - '--config'
-            - /data/mongod.conf
+            - /mongo_data/init_mongo.sh
           ports:
             - containerPort: 27017
               protocol: TCP
