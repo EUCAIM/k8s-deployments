@@ -16,9 +16,9 @@ spec:
     spec:
       containers:
          - name: node-dashboard
-           image: eucaim.cancerimage.eu:10443/library/nodejs
+           image: harbor.eucaim.cancerimage.eu/library/dashboard/node:22.16.0
            command:
-            - /data/runApp.sh
+            - /node_data/init_node.sh
            ports:
             - containerPort: 8080
               protocol: TCP
