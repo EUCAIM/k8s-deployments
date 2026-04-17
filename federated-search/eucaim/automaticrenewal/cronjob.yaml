@@ -1,0 +1,48 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: certificate-renewal
+spec:
+  # Run on the 1st and 21st of every month (every ~20 days).
+  # before expiry even if one renewal run fails.
+  schedule: "0 0 1,21 * *"
+
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      # Retry up to 3 times if the job fails
+      backoffLimit: 3
+      template:
+        spec:
+          containers:
+          - name: certificate-signer
+            image: docker.io/montoliur/certrenew
+            imagePullPolicy: Always
+            command: ["/usr/local/bin/sign_certificate.sh"]
+            env:
+              - name: VAULT_TOKEN
+                valueFrom:
+                  secretKeyRef:
+                    name: vault-credentials
+                    key: vault_token
+              - name: VAULT_ADDR
+                valueFrom:
+                  secretKeyRef:
+                    name: vault-credentials
+                    key: vault_addr
+            volumeMounts:
+            - name: configmap-volume
+              mountPath: /etc/config
+              readOnly: true
+            - name: secret-volume
+              mountPath: /etc/vault
+              readOnly: true
+          restartPolicy: OnFailure
+          volumes:
+          - name: configmap-volume
+            configMap:
+              name: certificate-requests
+          - name: secret-volume
+            secret:
+              secretName: vault-credentials
